@@ -1,3 +1,1 @@
-## Aboat
-
-# Click here [aboat](www.aboat.cc)
+## Click here [Aboat](www.aboat.cc)
