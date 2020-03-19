@@ -1,10 +1,10 @@
 import React from "react";
-import "./style.css";
+import Index from "./pages/index";
 
 function App() {
   return (
     <div className="App">
-      <p className="p">aboat</p>
+      <Index />
     </div>
   );
 }
