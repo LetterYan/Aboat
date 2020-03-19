@@ -92,7 +92,8 @@
     ]
   },
   "devDependencies": {
-    "less-loader": "^5.0.0"
+    "less-loader": "^5.0.0",
+    "react-scripts": "^3.4.0"
   },
   "jest": {
     "roots": [
