@@ -487,14 +487,21 @@ module.exports = function(webpackEnv) {
             {
               test: lessRegex,
               exclude: lessModuleRegex,
-              use: getStyleLoaders(
+              use: [
                 {
-                  importLoaders: 3,
-                  sourceMap: isEnvProduction && shouldUseSourceMap
+                  loader: "style-loader" // creates style nodes from JS strings
                 },
-                "less-loader"
-              ),
-              sideEffects: true
+                {
+                  loader: "css-loader" // translates CSS into CommonJS
+                },
+                {
+                  loader: "less-loader",
+                  options: {
+                    strictMath: true,
+                    noIeCompat: true
+                  }
+                }
+              ]
             },
             {
               test: lessModuleRegex,
