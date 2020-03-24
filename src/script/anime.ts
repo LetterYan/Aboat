@@ -1,7 +1,6 @@
-import { sysConfig, useStore, changeSysConfig } from "../stores";
 import { message, notification } from "antd";
 
-const Anime = () => {
+const useAnime = () => {
   message.config({
     duration: 2,
     maxCount: 3
@@ -14,9 +13,10 @@ const Anime = () => {
   });
 
   notification.open({
+    duration: null,
     message: "Hello World",
     description: "Welcome to A boat."
   });
 };
 
-export default Anime;
+export default useAnime;

@@ -1,4 +1,4 @@
-import { Anime } from "../script";
+import { useAnime } from "../script";
 // 存储服务
 const AV = require("leancloud-storage/live-query");
 // const { Query, User } = AV;
@@ -6,7 +6,7 @@ const AV = require("leancloud-storage/live-query");
 // const { Realtime, TextMessage } = require("leancloud-realtime");
 
 export default function Init() {
-  Anime();
+  useAnime();
   AV.init({
     appId: "D9hySRdRLQH9RKfpSnl3WnfS-MdYXbMMI",
     appKey: "UaxrXf14KUFHl9CiWyXL88D2",

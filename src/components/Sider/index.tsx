@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useHistory } from "react-router-dom";
 import { Layout, Menu } from "antd";
 import { HomeOutlined } from "@ant-design/icons";
-import { sysConfig, useStore, changeSysConfig } from "../../stores";
-import Styled from "./styled";
+import useSider from "./hook";
 
 export default function SideBar() {
   const history = useHistory();
-  const { _sider } = useStore(sysConfig);
-  const [collapsedWidth, setCollapsedWidth] = useState(80);
 
-  const onCollapse = () =>
-    changeSysConfig("_sider.collapsed", !_sider.collapsed);
+  const {
+    Styled,
+    collapsedWidth,
+    _sider,
+    onCollapse,
+    setCollapsedWidth
+  } = useSider();
 
   return (
     <Layout.Sider

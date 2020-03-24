@@ -1,1 +1,1 @@
-export { default as Anime } from "./anime";
+export { default as useAnime } from "./anime";
