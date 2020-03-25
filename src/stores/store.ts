@@ -35,7 +35,8 @@ export const userData = new Store(
  */
 export const sysConfig = new Store(
   {
-    _sider: { collapsed: false }
+    routerKey: 1,
+    theme: "skyBlue"
   },
   "sysConfig"
 );

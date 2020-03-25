@@ -1,27 +1,30 @@
 import React from "react";
-import { Layout, Carousel } from "antd";
+import { Carousel } from "antd";
 import useCarousel from "./hook";
-const { Content, Footer } = Layout;
+import styled from "styled-components";
 
 export default function Home() {
   const { Styled } = useCarousel();
   const arr = Array.from(new Array(1).keys());
 
+  const Content = styled.div`
+    padding: 20px;
+    width: 100%;
+    background: #f0f0f0;
+  `;
+
   return (
-    <Layout className="site-layout">
-      <Content style={{ margin: "20px" }}>
-        <Carousel autoplay>
-          {arr.map((item: number) => {
-            return (
-              <Styled.itemBox
-                key={item}
-                src={require(`../../../static/image/item${item}.jpg`)}
-              />
-            );
-          })}
-        </Carousel>
-      </Content>
-      <Footer style={{ textAlign: "center" }}>Hello World</Footer>
-    </Layout>
+    <Content>
+      <Carousel autoplay>
+        {arr.map((item: number) => {
+          return (
+            <Styled.itemBox
+              key={item}
+              src={require(`../../../static/image/item${item}.jpg`)}
+            />
+          );
+        })}
+      </Carousel>
+    </Content>
   );
 }

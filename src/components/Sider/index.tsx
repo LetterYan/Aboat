@@ -1,41 +1,42 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { Layout, Menu } from "antd";
 import { HomeOutlined } from "@ant-design/icons";
+import { sysConfig, useStore } from "../../stores";
 import useSider from "./hook";
+
+const routerPath = [
+  {
+    key: 1,
+    path: "/",
+    name: "A boat",
+    icon: <HomeOutlined />
+  }
+];
 
 export default function SideBar() {
   const history = useHistory();
+  const { Styled } = useSider();
+  const { routerKey } = useStore(sysConfig);
 
-  const {
-    Styled,
-    collapsedWidth,
-    _sider,
-    onCollapse,
-    setCollapsedWidth
-  } = useSider();
+  const link = (path: string) => history.push(path);
 
   return (
-    <Layout.Sider
-      breakpoint="xs"
-      collapsedWidth={collapsedWidth}
-      theme="light"
-      collapsed={_sider.collapsed}
-      onCollapse={onCollapse}
-      onBreakpoint={status => setCollapsedWidth(status ? 0 : 80)}
-    >
-      <Styled.Block onClick={() => history.push("/")}>A boat</Styled.Block>
-      <Menu
-        mode="inline"
-        theme="light"
-        defaultSelectedKeys={["1"]}
-        style={{ textAlign: "center" }}
-      >
-        <Menu.Item key="1">
-          <HomeOutlined />
-          <span>A boat</span>
-        </Menu.Item>
-      </Menu>
-    </Layout.Sider>
+    <Styled.Sider>
+      <Styled.Block onClick={() => link("/")}>A boat</Styled.Block>
+      <div>
+        {routerPath.map(item => {
+          return (
+            <Styled.MenuItem
+              key={item.key}
+              onClick={() => link(item.path)}
+              isActive={routerKey === item.key}
+            >
+              {item.icon}
+              <Styled.Name>{item.name}</Styled.Name>
+            </Styled.MenuItem>
+          );
+        })}
+      </div>
+    </Styled.Sider>
   );
 }

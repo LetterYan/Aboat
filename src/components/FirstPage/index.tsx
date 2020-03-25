@@ -1,10 +1,20 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import useFirstPage from "./hook";
 
 export default function FirstPage() {
   const { Styled } = useFirstPage();
-  return <Styled.Layout>
-    <Styled.H>H</Styled.H>
-    ello
-    </Styled.Layout>;
+  const [loadStatus, setLoadStatus] = useState(false);  
+  useEffect(() => {
+    setTimeout(() => setLoadStatus(true), 3000);
+  }, []);
+  return (
+    <>
+      {!loadStatus && (
+        <Styled.Layout>
+          <Styled.H>H</Styled.H>
+          ello
+        </Styled.Layout>
+      )}
+    </>
+  );
 }
