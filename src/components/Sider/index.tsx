@@ -1,17 +1,11 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { HomeOutlined } from "@ant-design/icons";
+import { HomeOutlined, PictureOutlined } from "@ant-design/icons";
 import { sysConfig, useStore } from "../../stores";
+import { routerList } from "../../constant";
 import useSider from "./hook";
 
-const routerPath = [
-  {
-    key: 1,
-    path: "/",
-    name: "A boat",
-    icon: <HomeOutlined />
-  }
-];
+const icons = [{ icon: <HomeOutlined /> }, { icon: <PictureOutlined /> }];
 
 export default function SideBar() {
   const history = useHistory();
@@ -19,19 +13,18 @@ export default function SideBar() {
   const { routerKey } = useStore(sysConfig);
 
   const link = (path: string) => history.push(path);
-
   return (
     <Styled.Sider>
       <Styled.Block onClick={() => link("/")}>A boat</Styled.Block>
       <div>
-        {routerPath.map(item => {
+        {routerList.map((item: any, index: number) => {
           return (
             <Styled.MenuItem
-              key={item.key}
+              key={item.name}
               onClick={() => link(item.path)}
-              isActive={routerKey === item.key}
+              isActive={routerKey === item.path}
             >
-              {item.icon}
+              {icons[index].icon}
               <Styled.Name>{item.name}</Styled.Name>
             </Styled.MenuItem>
           );

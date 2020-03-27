@@ -1,18 +1,19 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Switch, Route } from "react-router-dom";
 import { changeSysConfig } from "../../stores";
-import { SideBar } from "../../components";
+import { SideBar, Header } from "../../components";
+import { routerList } from "../../constant";
 import styled from "styled-components";
 import Home from "../home";
-
-const routerPath = [{ key: 1, path: "/" }];
+import Arts from "../arts";
 
 function bar() {
   return <div>sdada</div>;
 }
 
 export default function Index() {
+  const [title, setTitle] = useState("A boat");
   const history = useHistory();
 
   const Layout = styled.div`
@@ -20,28 +21,33 @@ export default function Index() {
     display: flex;
     flex: auto;
   `;
+  const Content = styled.div`
+    width: 100%;
+    margin-left: 200px;
+  `;
 
   useEffect(() => {
-    const current = routerPath.find(
+    const current = routerList.find(
       item => item.path === history.location.pathname
     );
-    if (current) changeSysConfig({ routerKey: current.key });
+
+    if (current) {
+      setTitle(current.title);
+      changeSysConfig({ routerKey: current.path });
+    }
   }, [history.location.pathname]);
 
   return (
     <Layout>
       <SideBar />
-      <Switch>
-        <Route
-          exact
-          path="/"
-          component={Home}
-          onEnter={() => {
-            console.log(123);
-          }}
-        />
-        <Route path="/bar" component={bar} />
-      </Switch>
+      <Content>
+        <Header title={title} />
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route path="/bar" component={bar} />
+          <Route path="/arts" component={Arts} />
+        </Switch>
+      </Content>
     </Layout>
   );
 }

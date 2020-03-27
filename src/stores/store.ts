@@ -35,7 +35,7 @@ export const userData = new Store(
  */
 export const sysConfig = new Store(
   {
-    routerKey: 1,
+    routerKey: "/",
     theme: "skyBlue"
   },
   "sysConfig"

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-interface ThemeProps {
+interface ActiveProps {
   isActive: boolean;
   theme: any;
 }
@@ -8,10 +8,14 @@ interface ThemeProps {
 export default function useSider() {
   const Styled = {
     Sider: styled.div`
-      position: relative;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 100;
       height: 100vh;
       min-width: 200px;
-      background: #ffffff;
+      box-shadow: 0 0 6px 0px rgba(0, 0, 0, 0.12);
+      background: ${props => props.theme.bgColor};
     `,
     MenuItem: styled.div`
       cursor: pointer;
@@ -22,12 +26,12 @@ export default function useSider() {
       align-items: center;
       transition: all 0.2s;
       overflow: hidden;
-      border-right: 3px solid #ffffff;
-      color: ${(props: ThemeProps) =>
+      border-right: 3px solid ${props => props.theme.bgColo};
+      color: ${(props: ActiveProps) =>
         props.isActive ? props.theme.active.fontColor : props.theme.fontColor};
-      background: ${(props: ThemeProps) =>
+      background: ${(props: ActiveProps) =>
         props.isActive ? props.theme.active.bgColor : props.theme.bgColor};
-      border-color: ${(props: ThemeProps) =>
+      border-color: ${(props: ActiveProps) =>
         props.isActive ? props.theme.active.fontColor : props.theme.bgColor};
       :hover {
         color: ${props => props.theme.active.fontColor};

@@ -9,7 +9,7 @@ const useAnime = () => {
   notification.config({
     placement: "topRight",
     bottom: 50,
-    duration: 3
+    duration: 5
   });
 
   notification.open({
