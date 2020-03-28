@@ -1,12 +1,20 @@
 import React from "react";
 import { Tooltip } from "antd";
 import { useHistory } from "react-router-dom";
-import { HomeOutlined, PictureOutlined } from "@ant-design/icons";
+import {
+  HomeOutlined,
+  PictureOutlined,
+  PayCircleOutlined
+} from "@ant-design/icons";
 import { sysConfig, useStore, changeSysConfig } from "../../stores";
 import { routerList } from "../../constant";
 import useSider from "./hook";
 
-const icons = [{ icon: <HomeOutlined /> }, { icon: <PictureOutlined /> }];
+const icons = [
+  { icon: <HomeOutlined /> },
+  { icon: <PictureOutlined /> },
+  { icon: <PayCircleOutlined /> }
+];
 
 export default function SideBar() {
   const history = useHistory();
@@ -31,7 +39,7 @@ export default function SideBar() {
             onClick={() => link(item.path)}
             isActive={routerPath === item.path}
           >
-            {icons[index].icon}
+            {icons[index] && icons[index].icon}
             <Styled.Name>{item.name}</Styled.Name>
           </Styled.MenuItem>
         );

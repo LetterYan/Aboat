@@ -32,11 +32,11 @@ export default function useSider() {
       background: ${(props: ActiveProps) =>
         props.isActive ? props.theme.active.bgColor : props.theme.bgColor};
       border-color: ${(props: ActiveProps) =>
-        props.isActive ? props.theme.active.fontColor : props.theme.bgColor};
+        props.isActive ? props.theme.primaryColor : props.theme.bgColor};
       :hover {
         color: ${props => props.theme.active.fontColor};
         background: ${props => props.theme.active.bgColor};
-        border-color: ${props => props.theme.active.fontColor};
+        border-color: ${props => props.theme.primaryColor};
       }
     `,
     Name: styled.span`
@@ -51,7 +51,7 @@ export default function useSider() {
       text-align: center;
       user-select: none;
       cursor: pointer;
-      background: rgb(24, 144, 255) no-repeat center;
+      background: ${props => props.theme.primaryColor} no-repeat center;
       background-image: url(${require("../../static/logo.svg")});
       background-size: contain;
       color: ${props => props.theme.fontColor};
