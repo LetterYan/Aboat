@@ -12,7 +12,7 @@ export default function useSider() {
       top: 0;
       left: 0;
       z-index: 100;
-      height: 100vh;
+      height: 100%;
       min-width: 200px;
       box-shadow: 0 0 6px 0px rgba(0, 0, 0, 0.12);
       background: ${props => props.theme.bgColor};

@@ -19,7 +19,7 @@ export default function Home() {
             );
           })}
         </Carousel>
-        <div style={{ height: "100vh", width: "100vw" }} />
+        <div style={{ height: "100vh" }} />
       </Styled.Layout>
     </Styled.Content>
   );
