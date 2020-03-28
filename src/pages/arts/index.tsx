@@ -7,14 +7,15 @@ export default function Arts() {
 
   return (
     <Layout>
-      {list.map((item, index) => {
+      {[...new Array(20).keys()].map(item => {
+        let num = Math.round(Math.random());
         return (
-          <ItemBox onClick={clickFN} key={item.time + index}>
+          <ItemBox onClick={clickFN} key={item}>
             <ImageBox>
-              <Img src={item.url} alt={item.name} />
+              <Img src={list[num].url} alt={list[num].name} />
             </ImageBox>
-            <div>{item.name}</div>
-            <div>{item.time}</div>
+            <div>{list[num].name}</div>
+            <div>{list[num].time}</div>
           </ItemBox>
         );
       })}

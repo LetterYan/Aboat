@@ -7,8 +7,8 @@ export default function useFirstPage() {
     }
 
     100% {
-      opacity: 0 ;
-      z-index:-1;
+      opacity: 0;
+      z-index: -1;
     }
   `;
   const moveAnime = keyframes`
@@ -37,9 +37,20 @@ export default function useFirstPage() {
         forwards;
     `,
 
-    H: styled.span`
+    Span: styled.span`
+      background: ${() => {
+        const color1 = randomColor();
+        const color2 = randomColor();
+        return `linear-gradient(to right, ${color1}, ${color2});`;
+      }};
       animation: ${moveAnime} 1s cubic-bezier(1, -0.9, 0.35, 1.32) forwards;
+      color: transparent;
+      -webkit-background-clip: text;
+      background-clip: text;
     `
   };
+  const randomColor = () =>
+    "#" +
+    ("00000" + ((Math.random() * 0x1000000) << 0).toString(16)).substr(-6);
   return { Styled };
 }

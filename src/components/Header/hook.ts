@@ -1,6 +1,9 @@
 import styled from "styled-components";
+import { sysConfig, useStore } from "../../stores";
 
 export default function useHeader() {
+  const { routerPath } = useStore(sysConfig);
+
   const Styled = {
     Header: styled.header`
       width: 100%;
@@ -17,5 +20,5 @@ export default function useHeader() {
       line-height: 55px;
     `
   };
-  return { Styled };
+  return { Styled, routerPath };
 }

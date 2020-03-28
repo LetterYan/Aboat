@@ -14,7 +14,7 @@ export default function Home() {
             return (
               <Styled.ItemBox
                 key={item}
-                src={require(`../../../static/image/item${item}.jpg`)}
+                src={require(`../../static/image/item${item}.jpg`)}
               />
             );
           })}

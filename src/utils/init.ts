@@ -1,12 +1,24 @@
-import { useAnime } from "../script";
-// 存储服务
+import { message, notification } from "antd";
 const AV = require("leancloud-storage/live-query");
-// const { Query, User } = AV;
-// 即时通讯服务
-// const { Realtime, TextMessage } = require("leancloud-realtime");
 
-export default function Init() {
-  useAnime();
+export default function useInit() {
+  message.config({
+    duration: 2,
+    maxCount: 3
+  });
+
+  notification.config({
+    placement: "topRight",
+    bottom: 50,
+    duration: 5
+  });
+
+  notification.open({
+    duration: null,
+    message: "你好，少侠",
+    description: "Welcome to A boat."
+  });
+
   AV.init({
     appId: "D9hySRdRLQH9RKfpSnl3WnfS-MdYXbMMI",
     appKey: "UaxrXf14KUFHl9CiWyXL88D2",

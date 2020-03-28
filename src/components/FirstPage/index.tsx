@@ -3,7 +3,7 @@ import useFirstPage from "./hook";
 
 export default function FirstPage() {
   const { Styled } = useFirstPage();
-  const [loadStatus, setLoadStatus] = useState(false);  
+  const [loadStatus, setLoadStatus] = useState(false);
   useEffect(() => {
     setTimeout(() => setLoadStatus(true), 3000);
   }, []);
@@ -11,8 +11,7 @@ export default function FirstPage() {
     <>
       {!loadStatus && (
         <Styled.Layout>
-          <Styled.H>H</Styled.H>
-          ello
+          <Styled.Span>Hello</Styled.Span>
         </Styled.Layout>
       )}
     </>

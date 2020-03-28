@@ -7,29 +7,28 @@ import useSider from "./hook";
 
 const icons = [{ icon: <HomeOutlined /> }, { icon: <PictureOutlined /> }];
 
-export default function SideBar() {
+export default function SideBar(props: any) {
   const history = useHistory();
   const { Styled } = useSider();
-  const { routerKey } = useStore(sysConfig);
+  const { routerPath } = useStore(sysConfig);
 
   const link = (path: string) => history.push(path);
+
   return (
     <Styled.Sider>
-      <Styled.Block onClick={() => link("/")}>A boat</Styled.Block>
-      <div>
-        {routerList.map((item: any, index: number) => {
-          return (
-            <Styled.MenuItem
-              key={item.name}
-              onClick={() => link(item.path)}
-              isActive={routerKey === item.path}
-            >
-              {icons[index].icon}
-              <Styled.Name>{item.name}</Styled.Name>
-            </Styled.MenuItem>
-          );
-        })}
-      </div>
+      <Styled.Block onClick={() => link("/")} />
+      {routerList.map((item: any, index: number) => {
+        return (
+          <Styled.MenuItem
+            key={item.name}
+            onClick={() => link(item.path)}
+            isActive={routerPath === item.path}
+          >
+            {icons[index].icon}
+            <Styled.Name>{item.name}</Styled.Name>
+          </Styled.MenuItem>
+        );
+      })}
     </Styled.Sider>
   );
 }

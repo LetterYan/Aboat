@@ -1,26 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
-import { Switch, Route } from "react-router-dom";
-import { changeSysConfig } from "../../stores";
-import { SideBar, Header } from "../../components";
-import { routerList } from "../../constant";
+import React, { useEffect } from "react";
+import { Switch, Route, useHistory } from "react-router-dom";
 import styled from "styled-components";
+import { SideBar, Header } from "../../components";
 import Home from "../home";
 import Arts from "../arts";
-
-function bar() {
-  return <div>sdada</div>;
-}
+import { routerList } from "../../constant";
+import { changeSysConfig } from "../../stores";
 
 export default function Index() {
-  const [title, setTitle] = useState("A boat");
   const history = useHistory();
-
   const Layout = styled.div`
     min-height: 100vh;
     display: flex;
     flex: auto;
   `;
+
   const Content = styled.div`
     width: 100%;
     margin-left: 200px;
@@ -30,21 +24,16 @@ export default function Index() {
     const current = routerList.find(
       item => item.path === history.location.pathname
     );
-
-    if (current) {
-      setTitle(current.title);
-      changeSysConfig({ routerKey: current.path });
-    }
+    if (current) changeSysConfig({ routerPath: current.path });
   }, [history.location.pathname]);
 
   return (
     <Layout>
       <SideBar />
       <Content>
-        <Header title={title} />
+        <Header />
         <Switch>
           <Route exact path="/" component={Home} />
-          <Route path="/bar" component={bar} />
           <Route path="/arts" component={Arts} />
         </Switch>
       </Content>

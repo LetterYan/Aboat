@@ -3,58 +3,14 @@ import styled from "styled-components";
 
 const list = [
   {
-    name: "google",
-    time: "2019",
-    url:
-      "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"
+    name: "Google",
+    time: "2020",
+    url: require("../../static/image/google.png")
   },
   {
-    name: "google",
-    time: "2019",
-    url:
-      "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"
-  },
-  {
-    name: "google",
-    time: "2019",
-    url:
-      "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"
-  },
-  {
-    name: "google",
-    time: "2019",
-    url:
-      "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"
-  },
-  {
-    name: "google",
-    time: "2019",
-    url:
-      "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"
-  },
-  {
-    name: "google",
-    time: "2019",
-    url:
-      "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"
-  },
-  {
-    name: "google",
-    time: "2019",
-    url:
-      "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"
-  },
-  {
-    name: "google",
-    time: "2019",
-    url:
-      "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"
-  },
-  {
-    name: "google",
-    time: "2019",
-    url:
-      "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"
+    name: "少侠",
+    time: "2020",
+    url: require("../../static/logo.svg")
   }
 ];
 

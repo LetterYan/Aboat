@@ -44,13 +44,19 @@ export default function useSider() {
       font-size: 14px;
     `,
     Block: styled.div`
-      width: 100%;
-      height: 80px;
+      width: 70%;
+      height: 50px;
+      margin: 15px auto;
       text-align: center;
-      line-height: 80px;
       user-select: none;
       font-size: 26px;
+      background: rgb(24, 144, 255) no-repeat center;
+      background-image: url(${require("../../static/logo.svg")});
+      background-size: contain;
       color: ${props => props.theme.fontColor};
+    `,
+    Logo: styled.img`
+      height: 50px;
     `
   };
 
