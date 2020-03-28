@@ -18,7 +18,9 @@ export default function useFeed() {
       padding-bottom: 60px;
       background: ${props => props.theme.viewBgColor};
     `,
-    Title: styled.h1`
+    Title: styled.div`
+      font-size: 32px;
+      color: ${props => props.theme.fontColor};
       text-align: center;
       margin-bottom: 80px;
     `,
