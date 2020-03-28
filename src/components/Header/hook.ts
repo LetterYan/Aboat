@@ -8,7 +8,7 @@ export default function useHeader() {
     Header: styled.header`
       width: 100%;
       height: 55px;
-      background: ${props => props.theme.viewBgColor};
+      background: ${props => props.theme.headerBgColor};
       position: sticky;
       top: 0;
       z-index: 98;

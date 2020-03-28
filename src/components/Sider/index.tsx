@@ -1,4 +1,5 @@
 import React from "react";
+import { Tooltip } from "antd";
 import { useHistory } from "react-router-dom";
 import { HomeOutlined, PictureOutlined } from "@ant-design/icons";
 import { sysConfig, useStore, changeSysConfig } from "../../stores";
@@ -20,7 +21,9 @@ export default function SideBar() {
 
   return (
     <Styled.Sider>
-      <Styled.Block onClick={clickLogo} />
+      <Tooltip placement="right" title="😏">
+        <Styled.Logo onClick={clickLogo} />
+      </Tooltip>
       {routerList.map((item: any, index: number) => {
         return (
           <Styled.MenuItem
