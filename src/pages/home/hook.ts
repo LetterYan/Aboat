@@ -6,7 +6,7 @@ export default function useCarousel() {
       width: 100%;
       padding: 20px;
       min-height: 100vh;
-      background: #f0f0f0;
+      background: ${props => props.theme.viewBgColor};
     `,
     Layout: styled.div`
       max-width: 1440px;

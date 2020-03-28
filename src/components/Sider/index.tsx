@@ -1,22 +1,26 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { HomeOutlined, PictureOutlined } from "@ant-design/icons";
-import { sysConfig, useStore } from "../../stores";
+import { sysConfig, useStore, changeSysConfig } from "../../stores";
 import { routerList } from "../../constant";
 import useSider from "./hook";
 
 const icons = [{ icon: <HomeOutlined /> }, { icon: <PictureOutlined /> }];
 
-export default function SideBar(props: any) {
+export default function SideBar() {
   const history = useHistory();
   const { Styled } = useSider();
-  const { routerPath } = useStore(sysConfig);
+  const { routerPath, theme } = useStore(sysConfig);
 
   const link = (path: string) => history.push(path);
 
+  const clickLogo = () => {
+    changeSysConfig({ theme: theme === "darkMode" ? "skyBlue" : "darkMode" });
+  };
+
   return (
     <Styled.Sider>
-      <Styled.Block onClick={() => link("/")} />
+      <Styled.Block onClick={clickLogo} />
       {routerList.map((item: any, index: number) => {
         return (
           <Styled.MenuItem

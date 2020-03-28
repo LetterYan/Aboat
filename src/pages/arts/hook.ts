@@ -17,6 +17,7 @@ const list = [
 export default function useArts() {
   const Styled = {
     Layout: styled.div`
+      background: ${props => props.theme.viewBgColor};
       width: 100%;
       padding: 20px;
       display: flex;
@@ -25,6 +26,7 @@ export default function useArts() {
       position: relative;
     `,
     ItemBox: styled.div`
+      color: ${props => props.theme.fontColor};
       height: 280px;
       width: 200px;
       padding: 20px;
@@ -35,7 +37,7 @@ export default function useArts() {
       transition: all 0.3s;
       display: inline-block;
       :hover {
-        box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 0 10px 2px ${props => props.theme.boxShadow};
         transform: matrix3d(1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1);
         img {
           width: 90%;

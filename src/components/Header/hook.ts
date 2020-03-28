@@ -8,7 +8,7 @@ export default function useHeader() {
     Header: styled.header`
       width: 100%;
       height: 55px;
-      background: rgba(255, 255, 255, 0.75);
+      background: ${props => props.theme.viewBgColor};
       position: sticky;
       top: 0;
       z-index: 98;
@@ -16,6 +16,7 @@ export default function useHeader() {
     `,
     Title: styled.span`
       font-size: 22px;
+      color: ${props => props.theme.fontColor};
       margin-left: 30px;
       line-height: 55px;
     `
