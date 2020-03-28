@@ -5,13 +5,12 @@ import { notification } from "antd";
 export default function useFeed() {
   const helpMe = () => {
     notification.warning({
-      duration: 3,
+      duration: null,
       message: "少侠，救救这个孩子吧",
       description: "这个孩子就快饿死了啊 少侠"
     });
   };
   useEffect(helpMe, []);
-  setInterval(helpMe, 10000);
   const Styled = {
     Layout: styled.div`
       border: ${props => props.theme.primaryColor} 5px double;

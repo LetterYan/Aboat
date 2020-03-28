@@ -8,20 +8,20 @@ import Themes from "./theme/themes";
 import "./app.less";
 
 function App() {
-  const [dark, setDark]: any = useState();
+  // const [dark, setDark]: any = useState();
   const { theme } = useStore(sysConfig);
-  if (theme === "darkMode") {
-    if (dark) {
-      dark.disabled = false;
-    } else {
-      require("antd/dist/antd.dark.less");
-      const styleTags = document.getElementsByTagName("style");
-      const darkTag = styleTags[styleTags.length - 1];
-      if ((darkTag.type = "text/css")) setDark(darkTag);
-    }
-  } else if (dark) {
-    dark.disabled = true;
-  }
+  // if (theme === "darkMode") {
+  //   if (dark) {
+  //     dark.disabled = false;
+  //   } else {
+  //     require("antd/dist/antd.dark.less");
+  //     const styleTags = document.getElementsByTagName("style");
+  //     const darkTag = styleTags[styleTags.length - 1];
+  //     if ((darkTag.type = "text/css")) setDark(darkTag);
+  //   }
+  // } else if (dark) {
+  //   dark.disabled = true;
+  // }
   return (
     <Router>
       <ThemeProvider theme={Themes[theme]}>
