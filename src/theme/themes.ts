@@ -1,30 +1,21 @@
-const primaryColor = "rgb(24, 144, 255)";
+const primaryColor = "#000000";
+// const primaryColor = "#900001";
+// const secondaryColor = "#fff200";
+const secondaryColor = "#ffffff";
+const opacity = "75";
 
 const Themes: any = {
-  skyBlue: {
+  default: {
     primaryColor,
-    fontColor: "rgba(0,0,0,0.65)",
-    bgColor: "#ffffff",
-    viewBgColor: "rgba(255,255,255,0.75)",
-    headerBgColor: "rgba(255,255,255,0.75)",
+    fontColor: secondaryColor + opacity,
+    bgColor: primaryColor,
+    viewBgColor: primaryColor + opacity,
     boxShadow: "#00000015",
     active: {
-      fontColor: primaryColor,
-      bgColor: "rgba(24, 144, 255,0.1)"
-    }
+      fontColor: secondaryColor,
+      bgColor: primaryColor,
+    },
   },
-  darkMode: {
-    primaryColor,
-    fontColor: "rgba(255,255,255,.65)",
-    bgColor: "#161819",
-    headerBgColor: "rgba(0,0,0,0.4)",
-    viewBgColor: "#2b2b2b",
-    boxShadow: "#ffffff15",
-    active: {
-      fontColor: primaryColor,
-      bgColor: "rgba(24, 144, 255,0.1)"
-    }
-  }
 };
 
 export default Themes;

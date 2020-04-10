@@ -4,24 +4,23 @@ const AV = require("leancloud-storage/live-query");
 export default function useInit() {
   message.config({
     duration: 2,
-    maxCount: 3
+    maxCount: 3,
   });
 
   notification.config({
     placement: "topRight",
     bottom: 50,
-    duration: 5
+    duration: 5,
   });
 
   notification.open({
-    duration: null,
     message: "你好，少侠",
-    description: "Welcome to A boat."
+    description: "Welcome to A boat.",
   });
 
   AV.init({
     appId: "D9hySRdRLQH9RKfpSnl3WnfS-MdYXbMMI",
     appKey: "UaxrXf14KUFHl9CiWyXL88D2",
-    serverURLs: "https//aboat.cc"
+    serverURLs: "https//aboat.cc",
   });
 }

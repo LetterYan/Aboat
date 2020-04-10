@@ -6,9 +6,10 @@ export default function useHeader() {
 
   const Styled = {
     Header: styled.header`
+      display: none;
       width: 100%;
       height: 55px;
-      background: ${props => props.theme.headerBgColor};
+      background: ${(props) => props.theme.headerBgColor};
       position: sticky;
       top: 0;
       z-index: 98;
@@ -16,10 +17,10 @@ export default function useHeader() {
     `,
     Title: styled.span`
       font-size: 22px;
-      color: ${props => props.theme.fontColor};
+      color: ${(props) => props.theme.fontColor};
       margin-left: 30px;
       line-height: 55px;
-    `
+    `,
   };
   return { Styled, routerPath };
 }

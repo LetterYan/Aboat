@@ -5,22 +5,21 @@ import { notification } from "antd";
 export default function useFeed() {
   const helpMe = () => {
     notification.warning({
-      duration: null,
       message: "少侠，救救这个孩子吧",
-      description: "这个孩子就快饿死了啊 少侠"
+      description: "这个孩子就快饿死了啊 少侠",
     });
   };
   useEffect(helpMe, []);
   const Styled = {
     Layout: styled.div`
-      border: ${props => props.theme.primaryColor} 5px double;
+      border: ${(props) => props.theme.primaryColor} 5px double;
       padding: 20px;
       padding-bottom: 60px;
-      background: ${props => props.theme.viewBgColor};
+      background: ${(props) => props.theme.viewBgColor};
     `,
-    Title: styled.div`
+    Title: styled.span`
       font-size: 32px;
-      color: ${props => props.theme.fontColor};
+      color: ${(props) => props.theme.fontColor};
       text-align: center;
       margin-bottom: 80px;
     `,
@@ -39,7 +38,7 @@ export default function useFeed() {
       :hover {
         transform: translate3d(0, -40px, 0);
       }
-    `
+    `,
   };
   return { Styled };
 }

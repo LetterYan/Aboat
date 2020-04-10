@@ -36,7 +36,7 @@ export const userData = new Store(
 export const sysConfig = new Store(
   {
     routerPath: "/",
-    theme: "skyBlue"
+    theme: "default"
   },
   "sysConfig"
 );

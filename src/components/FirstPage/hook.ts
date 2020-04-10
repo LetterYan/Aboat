@@ -32,12 +32,14 @@ export default function useFirstPage() {
       height: 100vh;
       position: fixed;
       z-index: 999999;
-      background-color: white;
+      background-color: ${(props: any) => props.theme.primaryColor};
       animation: 1s ${opacityAnime} 1.5s cubic-bezier(0.45, -0.14, 0.18, 0.82)
         forwards;
     `,
 
     Span: styled.span`
+      padding: 0 10px;
+      font-style: italic;
       background: ${() => {
         const color1 = randomColor();
         const color2 = randomColor();
@@ -47,7 +49,7 @@ export default function useFirstPage() {
       color: transparent;
       -webkit-background-clip: text;
       background-clip: text;
-    `
+    `,
   };
   const randomColor = () =>
     "#" +
