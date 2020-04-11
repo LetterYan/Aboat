@@ -19,7 +19,7 @@ export default function Home() {
       <div className="Layout">
         <SideBar />
         <div className="CarouselBox">
-          <Carousel  beforeChange={(from, to) => setIndex(to)}>
+          <Carousel autoplay  beforeChange={(f, t) => setIndex(t)}>
             {arr.map((item) => {
               return <img alt="" key={item} src={createURL(item)} />;
             })}
