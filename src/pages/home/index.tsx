@@ -1,37 +1,48 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Carousel } from "antd";
 import { SideBar } from "../../components";
 import { ColorUtils } from "../../utils";
 import "./style.less";
 
+const imgList = require
+  .context("../../static/image/carousel/")
+  .keys()
+  .map((str: any) => ({
+    path: require(`../../static/image/carousel/${str.replace("./", "")}`),
+    color: "",
+  }));
+
 export default function Home() {
-  const [index, setIndex] = useState(0);
-  const arr = [...new Array(3).keys()];
-  const createURL = (item: any) =>
-    require(`../../static/image/carousel/item${item}.jpg`);
-  const getColor = () =>
-    setTimeout(() => {
-      ColorUtils.colorfulImg(createURL(index));
-    }, 30);
+  const [current, setCurrent] = useState(0);
+  const [bgColor, setBgColor] = useState("");
+
+  const getColor = async () => {
+    if (imgList[current].color) {
+      setBgColor(imgList[current].color);
+    } else {
+      imgList[current].color = await ColorUtils.colorfulImg(
+        imgList[current].path
+      );
+      setBgColor(imgList[current].color);
+    }
+  };
+
+  useEffect(() => {
+    getColor();
+  }, [current]);
 
   return (
     <div className="Content">
       <div className="Layout">
         <SideBar />
         <div className="CarouselBox">
-          <Carousel autoplay  beforeChange={(f, t) => setIndex(t)}>
-            {arr.map((item) => {
-              return <img alt="" key={item} src={createURL(item)} />;
-            })}
+          <Carousel autoplay beforeChange={(f, t) => setCurrent(t)}>
+            {imgList.map(
+              ({ path }) => path && <img alt="" key={path} src={path} />
+            )}
           </Carousel>
         </div>
-        <div
-          className="BgCarousel"
-          style={{
-            backgroundImage: `url(${createURL(index)})`,
-            backgroundColor: `${getColor()}`,
-          }}
-        />
+        <div className="BgCarousel" style={{ backgroundColor: bgColor }} />
       </div>
     </div>
   );

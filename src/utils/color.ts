@@ -2,7 +2,7 @@
  * 获取图片平均色
  * @param imgUrl 图片地址
  */
-function colorfulImg(imgUrl: any) {
+const colorfulImg = (imgUrl: string): any => {
   var blockSize = 5,
     canvas = document.createElement("canvas"),
     imgEl = document.createElement("img"),
@@ -15,31 +15,35 @@ function colorfulImg(imgUrl: any) {
     count = 0;
   imgEl.src = imgUrl;
 
-  imgEl.style.width = "300px";
-  imgEl.style.height = "150px";
-  canvas.width = 300;
-  canvas.height = 150;
+  return new Promise((resolve) => {
+    imgEl.onload = () => {
+      imgEl.style.width = "300px";
+      imgEl.style.height = "150px";
+      canvas.width = 300;
+      canvas.height = 150;
 
-  if (!context) return defaultRGB;
-  context.drawImage(imgEl, 0, 0);
+      if (!context) return defaultRGB;
+      context.drawImage(imgEl, 0, 0);
 
-  try {
-    data = context.getImageData(0, 0, 10, 10);
-  } catch (e) {
-    return defaultRGB;
-  }
-  length = data.data.length;
-  while ((i += blockSize * 4) < length) {
-    ++count;
-    rgb.r += data.data[i];
-    rgb.g += data.data[i + 1];
-    rgb.b += data.data[i + 2];
-  }
+      try {
+        data = context.getImageData(0, 0, 10, 10);
+      } catch (e) {
+        return defaultRGB;
+      }
+      length = data.data.length;
+      while ((i += blockSize * 4) < length) {
+        ++count;
+        rgb.r += data.data[i];
+        rgb.g += data.data[i + 1];
+        rgb.b += data.data[i + 2];
+      }
 
-  rgb.r = ~~(rgb.r / count);
-  rgb.g = ~~(rgb.g / count);
-  rgb.b = ~~(rgb.b / count);
+      rgb.r = ~~(rgb.r / count);
+      rgb.g = ~~(rgb.g / count);
+      rgb.b = ~~(rgb.b / count);
 
-  return `rgb(${rgb.r},${rgb.g},${rgb.b})`;
-}
+      resolve(`rgb(${rgb.r},${rgb.g},${rgb.b})`);
+    };
+  });
+};
 export default { colorfulImg };
