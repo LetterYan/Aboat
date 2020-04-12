@@ -1,2 +1,1 @@
-export { userData, sysConfig, useStore } from "./store";
-export { changeSysConfig, changeUserData } from "./action";
+export { userData, useStore } from "./store";

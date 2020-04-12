@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
 interface ActiveProps {
-  isActive: boolean;
   theme: any;
 }
 
@@ -22,8 +21,7 @@ export default function useSider() {
       line-height: 80px;
       text-align: center;
       font-style: oblique;
-      color: ${(props: ActiveProps) =>
-        props.isActive ? props.theme.active.fontColor : props.theme.fontColor};
+      color: ${(props: ActiveProps) => props.theme.fontColor};
       background: ${(props: ActiveProps) => props.theme.viewBgColor};
       :hover {
         line-height: 110px;
