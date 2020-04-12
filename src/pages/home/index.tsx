@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Carousel } from "antd";
-import { SideBar } from "../../components";
-import { ColorUtils } from "../../utils";
+import { SideBar } from "components";
+import { ColorUtils } from "utils";
 import "./style.less";
-const com = require("../../components");
+
 const imgList = require
   .context("../../static/image/carousel/")
   .keys()
@@ -12,7 +12,6 @@ const imgList = require
     color: "",
   }));
 
-console.log(com);
 export default function Home() {
   const [current, setCurrent] = useState(0);
   const [bgColor, setBgColor] = useState("");

@@ -2,10 +2,10 @@ import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import Index from "./pages/index";
-import { FirstPage } from "./components";
-import { sysConfig, useStore } from "./stores";
-import Themes from "./theme/themes";
-import GlobalStyle from "./theme/createGlobalStyle";
+import { sysConfig, useStore } from "stores";
+import { FirstPage } from "components";
+import Themes from "theme/themes";
+import GlobalStyle from "theme/createGlobalStyle";
 import "./app.less";
 
 function App() {
