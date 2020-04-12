@@ -1,0 +1,96 @@
+@bordercolor: rgba(255, 255, 255, 0.2);
+.MovieStyle {
+  display: flex;
+  justify-content: space-between;
+  .RightBar,
+  .Content {
+    border: 1px solid @bordercolor;
+    height: calc(100vh - 50px);
+    backdrop-filter: blur(3px);
+  }
+  .Content {
+    border-right: 0;
+    user-select: none;
+    transition: width 0.5s;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .Upload {
+      width: 200px;
+      height: 100px;
+      line-height: 100px;
+      text-align: center;
+      display: inline-block;
+    }
+    #canvas {
+      max-height: calc(100vh - 100px);
+      max-width: 90%;
+      border: 1px solid @bordercolor;
+    }
+  }
+  .RightBar {
+    min-width: 230px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.08);
+    width: 20%;
+    position: fixed;
+    right: 0;
+    transition: transform 0.5s;
+    transform: translate3d(100%, 0px, 0px);
+    .Title {
+      padding: 15px 0;
+      font-size: 22px;
+      line-height: 28px;
+      border-bottom: 2px solid @bordercolor;
+    }
+    .ItemModule {
+      padding-top: 15px;
+      line-height: 18px;
+      font-size: 14px;
+      color: #8d8d8d;
+      > div {
+        padding: 5px 0;
+      }
+      .ModuleTitle {
+        color: #ffffff;
+        font-size: 18px;
+        line-height: 30px;
+        margin-bottom: 10px;
+        padding: 0;
+      }
+      .colorPicker {
+        border: none;
+        background: transparent;
+        padding: 0;
+        height: 30px;
+        width: 50px;
+        vertical-align: middle;
+      }
+    }
+    .ImgInfo {
+      .color {
+        border: 2px solid #ffffff;
+        padding: 0 5px;
+      }
+    }
+    .footerBtns {
+      position: absolute;
+      bottom: 20px;
+      left: 0;
+      width: 100%;
+      /* text-align: center; */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .save {
+        height: 35px;
+        line-height: 34px;
+        width: 40%;
+        text-align: center;
+        border: 1px solid @bordercolor;
+        cursor: pointer;
+      }
+    }
+  }
+}

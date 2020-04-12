@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Carousel } from "antd";
-import { SideBar } from "components";
+import { SideBar, WorksList } from "components";
 import { ColorUtils } from "utils";
 import "./style.less";
 
@@ -32,18 +32,21 @@ export default function Home() {
   }, [current]);
 
   return (
-    <div className="Content">
-      <div className="Layout">
-        <SideBar />
-        <div className="CarouselBox">
-          <Carousel autoplay beforeChange={(f, t) => setCurrent(t)}>
-            {imgList.map(
-              ({ path }) => path && <img alt="" key={path} src={path} />
-            )}
-          </Carousel>
+    <div className="Wrapper">
+      <div className="Content">
+        <div className="Layout">
+          <SideBar />
+          <div className="CarouselBox">
+            <Carousel autoplay beforeChange={(f, t) => setCurrent(t)}>
+              {imgList.map(
+                ({ path }) => path && <img alt="" key={path} src={path} />
+              )}
+            </Carousel>
+          </div>
+          <div className="BgCarousel" style={{ backgroundColor: bgColor }} />
         </div>
-        <div className="BgCarousel" style={{ backgroundColor: bgColor }} />
       </div>
+      <WorksList />
     </div>
   );
 }

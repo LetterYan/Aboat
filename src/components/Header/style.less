@@ -1,0 +1,40 @@
+.Header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  height: 50px;
+  line-height: 50px;
+  padding: 0 30px;
+  width: 100%;
+  background: #00000075;
+  backdrop-filter: blur(3px);
+  font-size: 22px;
+  z-index: 998;
+  .TitleBox {
+    .Title,
+    .Home {
+      user-select: none;
+      transition: all 0.3s;
+      position: absolute;
+    }
+    .Title {
+      opacity: 1;
+    }
+    .Home {
+      width: 60px;
+      text-align: center;
+      cursor: pointer;
+      opacity: 0;
+    }
+    &:hover {
+      .Title {
+        z-index: 998;
+        opacity: 0;
+      }
+      .Home {
+        z-index: 999;
+        opacity: 1;
+      }
+    }
+  }
+}

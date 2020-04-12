@@ -1,19 +1,9 @@
 const routerList = [
   {
-    path: "/",
-    name: "A boat",
-    title: "首页"
+    path: "/Works/MovieStyle",
+    name: "电影风格",
+    title: "电影风格",
   },
-  // {
-  //   path: "/arts",
-  //   name: "Arts",
-  //   title: "画廊"
-  // },
-  // {
-  //   path: "/feed",
-  //   name: "投食",
-  //   title: "投食"
-  // }
 ];
 
 export { routerList };
