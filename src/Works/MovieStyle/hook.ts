@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import { notification } from "antd";
-import { ColorUtils, deepClone } from "utils";
-const { colorfulImg, CalculateColor } = ColorUtils;
+import { notification, message } from "antd";
+import { deepClone, browser, colorfulImg, base64Img2Blob } from "noahsark";
 
 const photoProps = {
   width: 0,
@@ -9,33 +8,17 @@ const photoProps = {
   src: 0,
   color: "rgb(0, 0, 0)",
   img: new Image(),
+  imgSrc: "",
 };
 
 const photoInfoProps = { top: 150, bottom: 150, color: "#ffffff" };
 
-function base64Img2Blob(code: any) {
-  var parts = code.split(";base64,");
-  var contentType = parts[0].split(":")[1];
-  var raw = window.atob(parts[1]);
-  var rawLength = raw.length;
-
-  var uInt8Array = new Uint8Array(rawLength);
-
-  for (var i = 0; i < rawLength; ++i) {
-    uInt8Array[i] = raw.charCodeAt(i);
-  }
-
-  return new Blob([uInt8Array], { type: contentType });
-}
-
 const downloadFile = (content: any) => {
   var aLink = document.createElement("a");
   var blob = base64Img2Blob(content);
-  var evt = document.createEvent("MouseEvents");
-  evt.initEvent("click", false, false); //initEvent 不加后两个参数在FF下会报错, 感谢 Barret Lee 的反馈
   aLink.download = String(new Date().getTime());
   aLink.href = URL.createObjectURL(blob);
-  aLink.dispatchEvent(evt);
+  aLink.click();
 };
 
 export default function useMovieStyle(canvas: any) {
@@ -51,6 +34,11 @@ export default function useMovieStyle(canvas: any) {
     drawImage();
   }, [photoInfo]);
 
+  /**
+   * 绘制图片
+   * @param img 图片dom
+   * @param imgInfo 修改参数
+   */
   const drawImage = async (img?: any, imgInfo?: any) => {
     // 初次加载state
     const newPhoto = imgInfo || photo;
@@ -76,17 +64,29 @@ export default function useMovieStyle(canvas: any) {
       src: img.src,
       color,
       img,
+      imgSrc: canvas.toDataURL("image/png"),
     });
   };
 
+  /**
+   * 修改图片信息
+   */
   const changeInfo = (type: string, value: number | string) => {
     const oldPhotoInfo = deepClone(photoInfo);
     oldPhotoInfo[type] = value;
     setPhotoInfo(oldPhotoInfo);
   };
 
+  /**
+   * 保存图片
+   */
   const save = () => {
-    downloadFile(canvas.current.toDataURL("image/png"));
+    // 移动端提示长按保存图片
+    if (browser.mobile) {
+      message.success("请长按图片进行保存");
+    } else {
+      downloadFile(canvas.current.toDataURL("image/jpg"));
+    }
   };
 
   const DraggerProps = {
@@ -113,6 +113,7 @@ export default function useMovieStyle(canvas: any) {
             src: imgEvent.path[0].src,
             color,
             img,
+            imgSrc: "",
           };
           setPhoto(imgInfo);
           drawImage(img, imgInfo);
@@ -122,5 +123,12 @@ export default function useMovieStyle(canvas: any) {
     },
   };
 
-  return { photo, photoInfo, DraggerProps, isLoad, changeInfo, save };
+  return {
+    photo,
+    photoInfo,
+    DraggerProps,
+    isLoad,
+    changeInfo,
+    save,
+  };
 }

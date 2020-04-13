@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Carousel } from "antd";
 import { SideBar, WorksList } from "components";
-import { ColorUtils } from "utils";
+import { colorfulImg } from "noahsark";
 import "./style.less";
 
 const imgList = require
@@ -20,9 +20,7 @@ export default function Home() {
     if (imgList[current].color) {
       setBgColor(imgList[current].color);
     } else {
-      imgList[current].color = await ColorUtils.colorfulImg(
-        imgList[current].path
-      );
+      imgList[current].color = await colorfulImg(imgList[current].path);
       setBgColor(imgList[current].color);
     }
   };

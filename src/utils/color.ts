@@ -2,7 +2,7 @@
  * 获取图片平均色
  * @param imgUrl 图片地址
  */
-const colorfulImg = (imgUrl: string): any => {
+export const colorfulImg = (imgUrl: string): any => {
   let canvas = document.createElement("canvas"),
     imgEl = document.createElement("img"),
     context: any = canvas.getContext("2d"),
@@ -23,7 +23,11 @@ const colorfulImg = (imgUrl: string): any => {
   });
 };
 
-const CalculateColor: any = (context: any) => {
+/**
+ * 获取 `canvas` 平均色值
+ * @param ctx canvas.getContext(2d)
+ */
+export const CalculateColor: any = (ctx: any) => {
   let blockSize = 5,
     length,
     data,
@@ -33,7 +37,7 @@ const CalculateColor: any = (context: any) => {
     rgb = { r: 0, g: 0, b: 0 };
 
   try {
-    data = context.getImageData(0, 0, 10, 10);
+    data = ctx.getImageData(0, 0, 10, 10);
   } catch (e) {
     return defaultRGB;
   }
@@ -51,5 +55,3 @@ const CalculateColor: any = (context: any) => {
 
   return `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
 };
-
-export default { colorfulImg, CalculateColor };

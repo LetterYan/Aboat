@@ -1,7 +1,7 @@
 import { message, notification } from "antd";
 const AV = require("leancloud-storage/live-query");
 
-export default function useInit() {
+export const init = () => {
   message.config({
     duration: 2,
     maxCount: 3,
@@ -23,4 +23,4 @@ export default function useInit() {
     appKey: "UaxrXf14KUFHl9CiWyXL88D2",
     serverURLs: "https//aboat.cc",
   });
-}
+};

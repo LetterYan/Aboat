@@ -25,6 +25,11 @@
     var s = document.getElementsByTagName("script")[0];
     s.parentNode.insertBefore(mta, s);
   })();
+  document.body.addEventListener('touchmove', function (e) {
+    e.preventDefault()
+  }, {
+    passive: false
+  })
 </script>
 
 </html>
