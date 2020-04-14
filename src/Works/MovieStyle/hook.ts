@@ -44,7 +44,6 @@ export default function useMovieStyle(canvas: any) {
     const newPhoto = imgInfo || photo;
     img = img || photo.img;
     const color = await colorfulImg(img.src);
-    canvas = canvas.current;
     canvas.width = newPhoto.width;
     canvas.height = newPhoto.height + (photoInfo.bottom + photoInfo.top);
     const ctx = canvas.getContext("2d");
@@ -85,7 +84,7 @@ export default function useMovieStyle(canvas: any) {
     if (browser.mobile) {
       message.success("请长按图片进行保存");
     } else {
-      downloadFile(canvas.current.toDataURL("image/jpg"));
+      downloadFile(canvas.toDataURL("image/jpg"));
     }
   };
 
@@ -115,6 +114,8 @@ export default function useMovieStyle(canvas: any) {
             img,
             imgSrc: "",
           };
+          console.log(imgInfo.height, imgInfo.width);
+
           setPhoto(imgInfo);
           drawImage(img, imgInfo);
         };

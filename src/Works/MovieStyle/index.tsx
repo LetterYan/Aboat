@@ -5,11 +5,12 @@ import { moveElement } from "utils";
 import "./style.less";
 const { Dragger } = Upload;
 
+const cav = document.createElement('canvas');
+
 export default function MovieStyle() {
   let initTop = 0;
   const RightBar: any = useRef(null);
   const RightBarTitle: any = useRef(null);
-  const cav: any = useRef(null);
   const [mobileMode, setMobileMode] = useState(
     document.documentElement.clientWidth <= 1080
   );
@@ -47,7 +48,7 @@ export default function MovieStyle() {
   return (
     <div className="MovieStyle">
       <div className={`Content  ${isLoad && "LoadContent"}`}>
-        <canvas style={{ display: "none" }} ref={cav} />
+        {/* <canvas style={{ display: "none" }} ref={cav} /> */}
         <img id="canvas" src={photo.imgSrc} alt="" />
         {!isLoad && (
           <Dragger {...DraggerProps}>
