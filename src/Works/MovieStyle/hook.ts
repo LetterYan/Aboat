@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { notification, message } from "antd";
-import { deepClone, browser, colorfulImg, base64Img2Blob } from "noahsark";
+import { deepClone, browser, colorfulImg } from "noahsark";
 
 const photoProps = {
   width: 0,
@@ -11,20 +11,40 @@ const photoProps = {
   imgSrc: "",
 };
 
-const photoInfoProps = { top: 150, bottom: 150, color: "#ffffff" };
+const photoInfoProps = {
+  top: 150,
+  bottom: 150,
+  padding: 30,
+  fontSize: 48,
+  context: "",
+  color: "#ffffff",
+  fontColor: "#ffffff",
+  maskColor: "#ffffff",
+  maskOpacity: "00",
+  textCenter: false,
+  topOrBottom: "bottom",
+  leftOrRight: "right",
+};
 
 const downloadFile = (content: any) => {
   var aLink = document.createElement("a");
-  var blob = base64Img2Blob(content);
   aLink.download = String(new Date().getTime());
-  aLink.href = URL.createObjectURL(blob);
+  aLink.href = content;
   aLink.click();
 };
 
-export default function useMovieStyle(canvas: any) {
+const canvas = document.createElement("canvas");
+const backUpInfo = localStorage.getItem("photoInfoProps");
+
+// let imgSrc = "";
+
+export default function useMovieStyle() {
+  const imgDom: any = useRef(null);
   const [isLoad, setIsLoad] = useState(false);
   const [photo, setPhoto] = useState(photoProps);
-  const [photoInfo, setPhotoInfo]: any = useState(photoInfoProps);
+  const [photoInfo, setPhotoInfo]: any = useState(
+    backUpInfo ? JSON.parse(backUpInfo) : photoInfoProps
+  );
 
   useEffect(() => {
     setIsLoad(!!photo.src);
@@ -32,6 +52,7 @@ export default function useMovieStyle(canvas: any) {
 
   useEffect(() => {
     drawImage();
+    localStorage.setItem("photoInfoProps", JSON.stringify(photoInfo));
   }, [photoInfo]);
 
   /**
@@ -39,41 +60,92 @@ export default function useMovieStyle(canvas: any) {
    * @param img 图片dom
    * @param imgInfo 修改参数
    */
-  const drawImage = async (img?: any, imgInfo?: any) => {
+  const drawImage = () => {
+    const cav = canvas;
     // 初次加载state
-    const newPhoto = imgInfo || photo;
-    img = img || photo.img;
-    const color = await colorfulImg(img.src);
-    canvas.width = newPhoto.width;
-    canvas.height = newPhoto.height + (photoInfo.bottom + photoInfo.top);
-    const ctx = canvas.getContext("2d");
-    ctx.drawImage(img, 0, photoInfo.top);
+    cav.width = photo.width;
+    cav.height = photo.height + (photoInfo.bottom + photoInfo.top);
+    const ctx: any = cav.getContext("2d");
+    ctx.imageSmoothingEnabled = false;
+
+    ctx.drawImage(photo.img, 0, photoInfo.top);
     ctx.fillStyle = photoInfo.color;
-    ctx.fillRect(0, 0, canvas.width, photoInfo.top);
-    ctx.fillRect(
-      0,
-      canvas.height - photoInfo.bottom,
-      canvas.width,
-      photoInfo.bottom
+
+    // 上边框
+    ctx.fillRect(0, 0, cav.width, photoInfo.top);
+    // 下边框
+    ctx.fillRect(0, cav.height - photoInfo.bottom, cav.width, photoInfo.bottom);
+
+    // 处理滑动条
+    let opacity = photoInfo.maskOpacity;
+    if (String(opacity).length === 1) opacity = "0" + opacity;
+    if (photoInfo.maskOpacity === 100) opacity = "";
+    // 遮罩蒙板
+    ctx.fillStyle = photoInfo.maskColor + opacity;
+    ctx.fillRect(0, 0, cav.width, cav.height);
+
+    // 文字
+    ctx.fillStyle = photoInfo.fontColor;
+    ctx.font = `${photoInfo.fontSize}px Arial`;
+    ctx.textBaseline = "top";
+
+    const text = ctx.measureText(photoInfo.context);
+    let positionTrB: number = 0;
+    let positionLrR: number = 0;
+    if (!photoInfo.textCenter) {
+      // 非正中央显示
+      positionTrB =
+        photoInfo.topOrBottom === "top"
+          ? photoInfo.top / 2
+          : cav.height - photoInfo.bottom / 2;
+
+      switch (photoInfo.leftOrRight) {
+        case "left":
+          positionLrR = photoInfo.padding;
+          break;
+        case "right":
+          positionLrR = cav.width - photoInfo.padding - text.width;
+          break;
+        case "center":
+          positionLrR = cav.width / 2 - text.width / 2;
+          break;
+      }
+    } else {
+      // 正中央显示
+      positionTrB = cav.height / 2;
+      positionLrR = cav.width / 2 - text.width / 2;
+    }
+
+    ctx.fillText(
+      photoInfo.context,
+      positionLrR,
+      positionTrB - photoInfo.fontSize / 2
     );
 
-    setPhoto({
-      width: newPhoto.width,
-      height: newPhoto.height,
-      src: img.src,
-      color,
-      img,
-      imgSrc: canvas.toDataURL("image/png"),
-    });
+    const result = {
+      width: photo.width,
+      height: photo.height,
+      src: photo.src,
+      color: photo.color,
+      img: photo.img,
+      imgSrc: cav.toDataURL("image/jpeg"),
+    };
+    imgDom.current.src = result.imgSrc;
+    setPhoto(result);
   };
 
   /**
    * 修改图片信息
    */
-  const changeInfo = (type: string, value: number | string) => {
-    const oldPhotoInfo = deepClone(photoInfo);
-    oldPhotoInfo[type] = value;
-    setPhotoInfo(oldPhotoInfo);
+  const changeInfo = (type: string, value: number | string | boolean) => {
+    if (
+      /top|bottom|padding|fontSize/.test(type) &&
+      (value === "" || value === null)
+    ) {
+      value = 0;
+    }
+    photoInfo[type] = value;
+    setPhotoInfo(deepClone(photoInfo));
   };
 
   /**
@@ -84,7 +156,7 @@ export default function useMovieStyle(canvas: any) {
     if (browser.mobile) {
       message.success("请长按图片进行保存");
     } else {
-      downloadFile(canvas.toDataURL("image/jpg"));
+      downloadFile(photo.imgSrc);
     }
   };
 
@@ -106,18 +178,15 @@ export default function useMovieStyle(canvas: any) {
         img.src = file.thumbUrl;
         img.onload = async (imgEvent: any) => {
           const color = await colorfulImg(img.src);
-          const imgInfo = {
+          setPhoto({
             width: imgEvent.path[0].width,
             height: imgEvent.path[0].height,
             src: imgEvent.path[0].src,
             color,
             img,
             imgSrc: "",
-          };
-          console.log(imgInfo.height, imgInfo.width);
-
-          setPhoto(imgInfo);
-          drawImage(img, imgInfo);
+          });
+          changeInfo("color", photoInfo.color);
         };
       };
       return false;
@@ -131,5 +200,7 @@ export default function useMovieStyle(canvas: any) {
     isLoad,
     changeInfo,
     save,
+    imgDom,
+    canvas,
   };
 }
