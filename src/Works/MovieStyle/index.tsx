@@ -7,7 +7,10 @@ import {
   Checkbox,
   Slider,
   Tabs,
+  Popover,
 } from "antd";
+import { SmileOutlined } from "@ant-design/icons";
+import { EmojiBox } from "components";
 import hook from "./hook";
 import "./style.less";
 
@@ -60,27 +63,31 @@ const TextSwitch = [
 const margin = <>&nbsp;&nbsp;</>;
 
 export default class MovieStyle extends Component {
-  initTop = 0;
-  canvas: any = React.createRef();
+  initTop: number = 0;
+  timer: any = null;
   photo = photoProps;
+  canvas: any = React.createRef();
   DraggerProps = hook(this).DraggerProps;
   drawImage = hook(this).drawImage;
   changeInfo = hook(this).changeInfo;
   save = hook(this).save;
   state = {
     isLoad: false,
+    hiddenEmojiBox: false,
     photoInfo: backUpInfo ? JSON.parse(backUpInfo) : photoInfoProps,
     mobileMode: document.documentElement.clientWidth <= 1080,
   };
 
-  colorPicker = (value: string) => (
-    <input
-      className="colorPicker"
-      type="color"
-      value={this.state.photoInfo[value]}
-      onChange={(e: any) => this.changeInfo(value, e.target.value)}
-    />
-  );
+  colorPicker = (value: string) => {
+    return (
+      <input
+        className="colorPicker"
+        type="color"
+        value={this.state.photoInfo[value]}
+        onChange={(e: any) => this.changeInfo(value, e.target.value)}
+      />
+    );
+  };
 
   createModule = (list: any) => {
     if (this.state.mobileMode) {
@@ -107,7 +114,7 @@ export default class MovieStyle extends Component {
         </Tabs>
       );
     } else {
-      return list.map((item: any) => (
+      return list.map((item: any, i: number) => (
         <div className="ItemModule" key={item.title}>
           <div className="ModuleTitle">{item.title}</div>
           {item.child.map((child: any, i: number) => (
@@ -118,20 +125,32 @@ export default class MovieStyle extends Component {
     }
   };
 
-  componentDidMount() {
-    window.onresize = () => {
-      const checkMode = document.documentElement.clientWidth <= 1080;
-      this.setState({ mobileMode: checkMode });
-    };
-  }
+  clickEmoji = (emoji: any) => {
+    const { changeInfo } = this;
+    let { photoInfo } = this.state;
+    changeInfo("context", `${photoInfo.context}[${emoji.name}]`);
+    this.setState({ hiddenEmojiBox: false });
+  };
 
-  timer: any = null;
+  EmojiPopover = () => (
+    <Popover
+      trigger="click"
+      arrowPointAtCenter
+      visible={this.state.hiddenEmojiBox}
+      placement={this.state.mobileMode ? "top" : "left"}
+      onVisibleChange={(open: boolean) =>
+        this.setState({ hiddenEmojiBox: open })
+      }
+      content={<EmojiBox callback={(reslut: any) => this.clickEmoji(reslut)} />}
+    >
+      <SmileOutlined />
+    </Popover>
+  );
 
-  render() {
-    const { DraggerProps, photo, changeInfo, save, colorPicker } = this;
-    let { canvas, timer } = this;
-    const { isLoad, mobileMode, photoInfo } = this.state;
-    const moduleList = [
+  moduleList = () => {
+    const { photoInfo } = this.state;
+    const { photo, colorPicker, changeInfo, EmojiPopover } = this;
+    return [
       {
         notMobile: true,
         title: "基本信息",
@@ -162,7 +181,7 @@ export default class MovieStyle extends Component {
             {colorPicker("color")}
           </>,
           <>
-            上边距{margin}
+            上边{margin}
             <InputNumber
               value={photoInfo.top}
               size="small"
@@ -172,7 +191,7 @@ export default class MovieStyle extends Component {
             />
           </>,
           <>
-            下边距{margin}
+            下边{margin}
             <InputNumber
               value={photoInfo.bottom}
               size="small"
@@ -187,6 +206,7 @@ export default class MovieStyle extends Component {
         title: "文字",
         child: [
           <Input
+            // addonAfter={EmojiPopover()}
             className="InputContext"
             size="small"
             placeholder="你好？少侠！"
@@ -264,15 +284,28 @@ export default class MovieStyle extends Component {
         ],
       },
     ];
+  };
+
+  componentDidMount() {
+    window.onresize = () => {
+      const checkMode = document.documentElement.clientWidth <= 1080;
+      this.setState({ mobileMode: checkMode });
+    };
+  }
+
+  render() {
+    const { DraggerProps, save, moduleList } = this;
+    let { canvas, timer } = this;
+    const { isLoad, mobileMode } = this.state;
 
     const footerBtns = (
       <div className="footerBtns">
         <div className="save" onClick={save}>
           保存
         </div>
-        <span className="replitImg">
-          <Upload {...DraggerProps}>更换图像</Upload>
-        </span>
+        <Upload className="replitImg" {...DraggerProps}>
+          更换图像
+        </Upload>
       </div>
     );
 
@@ -280,7 +313,7 @@ export default class MovieStyle extends Component {
       <div className="MovieStyle">
         {mobileMode && footerBtns}
         <div className={`Content  ${isLoad && "LoadContent"}`}>
-          <div className="canvasBox">
+          <div hidden={!isLoad} className="canvasBox">
             <img
               alt=""
               src="null"
@@ -295,9 +328,8 @@ export default class MovieStyle extends Component {
                 e.target.src = this.canvas.current.toDataURL("image/png");
               }}
               onTouchEnd={() => clearTimeout(timer)}
-              hidden={!isLoad}
             />
-            <canvas ref={canvas} id="canvas" hidden={!isLoad}></canvas>
+            <canvas ref={canvas} id="canvas"></canvas>
           </div>
           {!isLoad && (
             <Dragger {...DraggerProps}>
@@ -308,7 +340,7 @@ export default class MovieStyle extends Component {
         <div className={`RightBar ${isLoad && "LoadRight"}`}>
           <div className="Title">工作台</div>
           <div className={`RightBarContent ${!isLoad && "disabled"}`}>
-            {this.createModule(moduleList)}
+            {this.createModule(moduleList())}
             <div hidden={mobileMode} className="ItemModule">
               {footerBtns}
             </div>

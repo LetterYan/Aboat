@@ -1,17 +1,21 @@
 import { message } from "antd";
 import { colorfulImg, browser } from "noahsark";
+import { emojisSet } from "constant";
 
 export default function (_this: any) {
   const DraggerProps = {
     name: "photo",
+    accept: "image/*",
     multiple: false,
     showUploadList: false,
+    onChange: () => {
+      message.loading({ content: "Loading...", key: "loading" });
+    },
     beforeUpload: (file: any) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = (e: any) => {
         file.thumbUrl = e.target.result;
-        message.success("加载完成，此操作不会上传任何文件");
         const img = new Image();
         img.src = file.thumbUrl;
         img.onload = async (imgEvent: any) => {
@@ -24,6 +28,10 @@ export default function (_this: any) {
             img,
           };
           _this.drawImage();
+          message.success({
+            content: "加载成功！此操作不会上传任何文件",
+            key: "loading",
+          });
           _this.setState({ isLoad: true });
         };
       };
@@ -67,6 +75,28 @@ export default function (_this: any) {
     ctx.font = `${photoInfo.fontSize}px Arial`;
     ctx.textBaseline = "top";
 
+    // const reg = new RegExp(/\[([^[\]]*)\]/g);
+    // const textList = photoInfo.context.split(reg);
+
+    // let textWidth: number = 0;
+    // textList.map((item: string) => {
+    //   if (item.match("c-")) {
+    //     textWidth += photoInfo.fontSize;
+    //     const emojie = emojisSet[item];
+    //     emojie.width = photoInfo.fontSize + "px";
+    //     ctx.drawImage(
+    //       emojie,
+    //       textWidth,
+    //       photoInfo.top / 2 - photoInfo.fontSize / 2,
+    //       photoInfo.fontSize,
+    //       photoInfo.fontSize
+    //     );
+    //   } else {
+    //     const text = ctx.measureText(item);
+    //     textWidth += text.width;
+    //   }
+    // });
+
     const text = ctx.measureText(photoInfo.context);
     let positionTrB: number = 0;
     let positionLrR: number = 0;
@@ -101,7 +131,7 @@ export default function (_this: any) {
     );
   };
 
-  let time = true;
+  let time: boolean = true;
   /**
    * 修改图片信息
    */
@@ -116,10 +146,11 @@ export default function (_this: any) {
       }
       const photoInfo = _this.state.photoInfo;
       photoInfo[type] = value;
-      localStorage.setItem("photoInfoProps", JSON.stringify(photoInfo));
       _this.setState({ photoInfo });
       requestAnimationFrame(_this.drawImage);
-      setTimeout(() => (time = true), 50);
+      localStorage.setItem("photoInfoProps", JSON.stringify(photoInfo));
+      // 时间高于10会出现打字输入被间断
+      setTimeout(() => (time = true), 10);
     }
   };
 
@@ -141,14 +172,16 @@ export default function (_this: any) {
    * 保存图片
    */
   const save = () => {
+    message.loading({ content: "下载中...", key: "download" });
     // 移动端提示长按保存图片
     if (browser.mobile) {
-      message.success("请长按图片进行保存");
+      message.success({ content: "请长按图片进行保存", key: "download" });
     } else {
       var aLink = document.createElement("a");
       aLink.download = String(new Date().getTime());
       aLink.href = _this.canvas.current.toDataURL("image/png");
       aLink.click();
+      message.success({ content: "下载成功", key: "download" });
     }
   };
   return { DraggerProps, drawImage, changeInfo, save };
