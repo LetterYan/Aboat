@@ -1,241 +1,320 @@
-import React, { useRef, useEffect, useState } from "react";
-import useMovieStyle from "./hook";
-import { Upload, InputNumber, Radio, Input, Checkbox, Slider } from "antd";
+import React, { Component } from "react";
+import {
+  Upload,
+  InputNumber,
+  Radio,
+  Input,
+  Checkbox,
+  Slider,
+  Tabs,
+} from "antd";
 import { moveElement } from "utils";
+import hook from "./hook";
 import "./style.less";
-const { Dragger } = Upload;
 
-export default function MovieStyle() {
-  let initTop = 0;
-  const RightBar: any = useRef(null);
-  const RightBarTitle: any = useRef(null);
-  const [mobileMode, setMobileMode] = useState(
-    document.documentElement.clientWidth <= 1080
+const { Dragger } = Upload;
+const { TabPane } = Tabs;
+
+const photoProps = {
+  width: 0,
+  height: 0,
+  src: 0,
+  color: "rgb(0, 0, 0)",
+  img: new Image(),
+};
+
+const photoInfoProps = {
+  top: 150,
+  bottom: 150,
+  padding: 30,
+  fontSize: 48,
+  context: "",
+  color: "#ffffff",
+  fontColor: "#ffffff",
+  maskColor: "#ffffff",
+  maskOpacity: "00",
+  textCenter: false,
+  topOrBottom: "bottom",
+  leftOrRight: "right",
+};
+
+const backUpInfo = localStorage.getItem("photoInfoProps");
+
+const TextSwitch = [
+  {
+    type: "topOrBottom",
+    values: [
+      { val: "top", text: "上" },
+      { val: "bottom", text: "下" },
+    ],
+  },
+  {
+    type: "leftOrRight",
+    values: [
+      { val: "left", text: "左" },
+      { val: "center", text: "中" },
+      { val: "right", text: "右" },
+    ],
+  },
+];
+
+const margin = <>&nbsp;&nbsp;</>;
+
+export default class MovieStyle extends Component {
+  initTop = 0;
+  imgDom: any = React.createRef();
+  RightBar: any = React.createRef();
+  RightBarTitle: any = React.createRef();
+  photo = photoProps;
+  DraggerProps = hook(this).DraggerProps;
+  drawImage = hook(this).drawImage;
+  changeInfo = hook(this).changeInfo;
+  moveRightBar = hook(this).moveRightBar;
+  save = hook(this).save;
+  state = {
+    isLoad: false,
+    photoInfo: backUpInfo ? JSON.parse(backUpInfo) : photoInfoProps,
+    mobileMode: document.documentElement.clientWidth <= 1080,
+  };
+
+  colorPicker = (value: string) => (
+    <input
+      className="colorPicker"
+      type="color"
+      value={this.state.photoInfo[value]}
+      onChange={(e: any) => this.changeInfo(value, e.target.value)}
+    />
   );
 
-  useEffect(() => {
-    window.onresize = () => {
-      const checkMode = document.documentElement.clientWidth <= 1080;
-      setMobileMode(checkMode);
-      if (!checkMode) {
-        RightBar.current.style.top = "unset";
-        RightBar.current.style.left = "unset";
-      }
-    };
-  }, []);
-
-  const {
-    photo,
-    photoInfo,
-    DraggerProps,
-    isLoad,
-    changeInfo,
-    save,
-    imgDom,
-  } = useMovieStyle();
-
-  const moveRightBar = (e: any) => {
-    if (initTop === 0) initTop = RightBar.current.offsetTop;
-    const maxMoveSize = window.innerHeight - RightBar.current.offsetHeight;
-    let top = e.touches[0].clientY - RightBarTitle.current.offsetHeight / 2;
-    if (top > maxMoveSize && top < window.innerHeight * 0.7 + 50) {
-      top = top - initTop;
-      RightBar.current.style.transform = `translate3d(0, ${top}px, 0px)`;
+  createModule = (list: any) => {
+    if (this.state.mobileMode) {
+      return (
+        <Tabs
+          defaultActiveKey="0"
+          animated={false}
+          size="small"
+          tabBarStyle={{ padding: "0 30px" }}
+          tabBarGutter={30}
+        >
+          {list.map(
+            (item: any, i: string) =>
+              !item.notMobile && (
+                <TabPane tab={item.title} key={i}>
+                  <div className="ItemModule">
+                    {item.child.map((child: any, i: number) => (
+                      <div key={i}>{child}</div>
+                    ))}
+                  </div>
+                </TabPane>
+              )
+          )}
+        </Tabs>
+      );
+    } else {
+      return list.map((item: any) => (
+        <div className="ItemModule" key={item.title}>
+          <div className="ModuleTitle">{item.title}</div>
+          {item.child.map((child: any, i: number) => (
+            <div key={i}>{child}</div>
+          ))}
+        </div>
+      ));
     }
   };
 
-  const TextSwitch = [
-    {
-      type: "topOrBottom",
-      values: [
-        { val: "top", text: "上" },
-        { val: "bottom", text: "下" },
-      ],
-    },
-    {
-      type: "leftOrRight",
-      values: [
-        { val: "left", text: "左" },
-        { val: "center", text: "中" },
-        { val: "right", text: "右" },
-      ],
-    },
-  ];
+  componentDidMount() {
+    window.onresize = () => {
+      const checkMode = document.documentElement.clientWidth <= 1080;
+      this.setState({ mobileMode: checkMode });
+      if (!checkMode) {
+        console.log(this.RightBar);
+        this.RightBar.current.style.top = "unset";
+        this.RightBar.current.style.left = "unset";
+      }
+    };
+  }
 
-  const margin = <>&nbsp;&nbsp;</>;
-
-  return (
-    <div className="MovieStyle">
-      <div className={`Content  ${isLoad && "LoadContent"}`}>
-        <img alt="" ref={imgDom} id="canvas" hidden={!isLoad} />
-        {!isLoad && (
-          <Dragger {...DraggerProps}>
-            <span className="Upload">选择图像</span>
-          </Dragger>
-        )}
-      </div>
-      <div ref={RightBar} className={`RightBar ${isLoad && "LoadRight"}`}>
-        <div
-          ref={RightBarTitle}
-          className="Title"
-          onTouchMove={moveRightBar}
-          onMouseMove={() => {
-            if (mobileMode) {
-              moveElement(RightBarTitle.current, RightBar.current, true);
-            }
-          }}
-        >
-          工作台
-        </div>
-        <div className={`RightBarContent ${!isLoad && "disabled"}`}>
-          <div className="ItemModule ImgInfo">
-            <div className="ModuleTitle">基本信息</div>
-            <div>
-              宽度{margin}
-              {photo.height}
-            </div>
-            <div>
-              高度{margin}
-              {photo.width}
-              {margin}->{margin}
-              {photo.height + photoInfo.top + photoInfo.bottom}
-            </div>
-            <div>
-              平均色值{margin}
-              <span className="color" style={{ borderColor: photo.color }}>
-                {photo.color}
-              </span>
-            </div>
-          </div>
-          <div className="ItemModule">
-            <div className="ModuleTitle">遮罩调整</div>
-            <div>
-              颜色{margin}
-              <input
-                className="colorPicker"
-                type="color"
-                value={photoInfo.color}
-                onChange={(e: any) => changeInfo("color", e.target.value)}
-              />
-            </div>
-            <div>
-              上边距{margin}
-              <InputNumber
-                value={photoInfo.top}
-                size="small"
-                min={0}
-                onChange={(value = 0) => changeInfo("top", value)}
-                defaultValue={photoInfo.top}
-              />
-            </div>
-            <div>
-              下边距{margin}
-              <InputNumber
-                value={photoInfo.bottom}
-                size="small"
-                min={0}
-                onChange={(value = 0) => changeInfo("bottom", value)}
-                defaultValue={photoInfo.bottom}
-              />
-            </div>
-            <div className="footerBtns">
-              <div className="save" onClick={save}>
-                保存
-              </div>
-              <span className="replitImg">
-                <Upload {...DraggerProps}>更换图像</Upload>
-              </span>
-            </div>
-          </div>
-          <div className="ItemModule">
-            <div className="ModuleTitle">文字调整</div>
-            <Input
+  render() {
+    const { DraggerProps, photo, changeInfo, save, colorPicker } = this;
+    let { imgDom, RightBar, RightBarTitle } = this;
+    const { isLoad, mobileMode, photoInfo } = this.state;
+    const moduleList = [
+      {
+        notMobile: true,
+        title: "基本信息",
+        child: [
+          <>
+            宽度{margin}
+            {photo.height}
+          </>,
+          <>
+            高度{margin}
+            {photo.width}
+            {margin}->{margin}
+            {photo.height + photoInfo.top + photoInfo.bottom}
+          </>,
+          <>
+            平均色值{margin}
+            <span className="color" style={{ borderColor: photo.color }}>
+              {photo.color}
+            </span>
+          </>,
+        ],
+      },
+      {
+        title: "遮罩",
+        child: [
+          <>
+            颜色{margin}
+            {colorPicker("color")}
+          </>,
+          <>
+            上边距{margin}
+            <InputNumber
+              value={photoInfo.top}
               size="small"
-              className="Block"
-              placeholder="你好？少侠！"
-              onChange={(e) => changeInfo("context", e.target.value)}
-              value={photoInfo.context}
+              min={0}
+              onChange={(value = 0) => changeInfo("top", value)}
+              defaultValue={photoInfo.top}
             />
-            <div>
-              颜色{margin}
-              <input
-                className="colorPicker"
-                type="color"
-                value={photoInfo.fontColor}
-                onChange={(e: any) => changeInfo("fontColor", e.target.value)}
-              />
-            </div>
-            <div>
-              边距{margin}
-              <InputNumber
-                min={0}
-                size="small"
-                value={photoInfo.padding}
-                onChange={(val = 0) => changeInfo("padding", val)}
-              />
-            </div>
-            <div>
-              大小{margin}
-              <InputNumber
-                min={0}
-                size="small"
-                value={photoInfo.fontSize}
-                onChange={(val = 0) => changeInfo("fontSize", val)}
-              />
-            </div>
-            <div>
-              位置{margin}
-              <div className="Block">
-                <Checkbox
-                  checked={photoInfo.textCenter}
-                  onChange={(e) => changeInfo("textCenter", e.target.checked)}
-                />
-                {margin}中央显示
+          </>,
+          <>
+            下边距{margin}
+            <InputNumber
+              value={photoInfo.bottom}
+              size="small"
+              min={0}
+              onChange={(value = 0) => changeInfo("bottom", value)}
+              defaultValue={photoInfo.bottom}
+            />
+          </>,
+        ],
+      },
+      {
+        title: "文字",
+        child: [
+          <Input
+            className="InputContext"
+            size="small"
+            placeholder="你好？少侠！"
+            onChange={(e) => changeInfo("context", e.target.value)}
+            value={photoInfo.context}
+          />,
+          <>
+            颜色{margin}
+            {colorPicker("fontColor")}
+          </>,
+          <>
+            边距{margin}
+            <InputNumber
+              min={0}
+              size="small"
+              value={photoInfo.padding}
+              onChange={(val = 0) => changeInfo("padding", val)}
+            />
+          </>,
+          <>
+            大小{margin}
+            <InputNumber
+              min={0}
+              size="small"
+              value={photoInfo.fontSize}
+              onChange={(val = 0) => changeInfo("fontSize", val)}
+            />
+          </>,
+        ],
+      },
+      {
+        title: "位置",
+        child: [
+          <>
+            {TextSwitch.map((item) => (
+              <div className="Block" key={item.type}>
+                <Radio.Group
+                  disabled={photoInfo.textCenter}
+                  value={photoInfo[item.type]}
+                  onChange={(e) => changeInfo(item.type, e.target.value)}
+                >
+                  {item.values.map((check) => (
+                    <Radio value={check.val} key={check.val}>
+                      {check.text}
+                    </Radio>
+                  ))}
+                </Radio.Group>
               </div>
-              <div>
-                {TextSwitch.map((item) => {
-                  return (
-                    <div className="Block" key={item.type}>
-                      <Radio.Group
-                        disabled={photoInfo.textCenter}
-                        value={photoInfo[item.type]}
-                        onChange={(e) => changeInfo(item.type, e.target.value)}
-                      >
-                        {item.values.map((check) => (
-                          <Radio value={check.val} key={check.val}>
-                            {check.text}
-                          </Radio>
-                        ))}
-                      </Radio.Group>
-                    </div>
-                  );
-                })}
-              </div>
+            ))}
+          </>,
+          <Checkbox
+            checked={photoInfo.textCenter}
+            onChange={(e) => changeInfo("textCenter", e.target.checked)}
+          >
+            中央显示
+          </Checkbox>,
+        ],
+      },
+      {
+        title: "蒙板",
+        child: [
+          <>
+            颜色{margin}
+            {colorPicker("maskColor")}
+          </>,
+          <>
+            透明度{margin}
+            <div style={{ paddingLeft: "10px" }}>
+              <Slider
+                value={photoInfo.maskOpacity}
+                onChange={(value: any) => changeInfo("maskOpacity", value)}
+              />
             </div>
+          </>,
+        ],
+      },
+    ];
+
+    const footerBtns = (
+      <div className="footerBtns">
+        <div className="save" onClick={save}>
+          保存
+        </div>
+        <span className="replitImg">
+          <Upload {...DraggerProps}>更换图像</Upload>
+        </span>
+      </div>
+    );
+
+    return (
+      <div className="MovieStyle">
+        {mobileMode && footerBtns}
+        <div className={`Content  ${isLoad && "LoadContent"}`}>
+          <img alt="" ref={imgDom} id="canvas" hidden={!isLoad} />
+          {!isLoad && (
+            <Dragger {...DraggerProps}>
+              <span className="Upload">选择图像</span>
+            </Dragger>
+          )}
+        </div>
+        <div ref={RightBar} className={`RightBar ${isLoad && "LoadRight"}`}>
+          <div
+            ref={RightBarTitle}
+            className="Title"
+            onTouchMove={this.moveRightBar}
+            onMouseMove={() => {
+              if (mobileMode) {
+                moveElement(RightBarTitle.current, RightBar.current, true);
+              }
+            }}
+          >
+            工作台
           </div>
-          <div className="ItemModule">
-            <div className="ModuleTitle">蒙板调整</div>
-            <div>
-              颜色{margin}
-              <input
-                className="colorPicker"
-                type="color"
-                value={photoInfo.maskColor}
-                onChange={(e: any) => changeInfo("maskColor", e.target.value)}
-              />
-            </div>
-            <div>
-              透明度{margin}
-              <div style={{ paddingLeft: "10px" }}>
-                <Slider
-                  value={photoInfo.maskOpacity}
-                  onChange={(value: any) => changeInfo("maskOpacity", value)}
-                />
-              </div>
+          <div className={`RightBarContent ${!isLoad && "disabled"}`}>
+            {this.createModule(moduleList)}
+            <div hidden={mobileMode} className="ItemModule">
+              {footerBtns}
             </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
 }

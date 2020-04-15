@@ -1,59 +1,41 @@
-import { useState, useEffect, useRef } from "react";
 import { notification, message } from "antd";
-import { deepClone, browser, colorfulImg } from "noahsark";
-
-const photoProps = {
-  width: 0,
-  height: 0,
-  src: 0,
-  color: "rgb(0, 0, 0)",
-  img: new Image(),
-  imgSrc: "",
-};
-
-const photoInfoProps = {
-  top: 150,
-  bottom: 150,
-  padding: 30,
-  fontSize: 48,
-  context: "",
-  color: "#ffffff",
-  fontColor: "#ffffff",
-  maskColor: "#ffffff",
-  maskOpacity: "00",
-  textCenter: false,
-  topOrBottom: "bottom",
-  leftOrRight: "right",
-};
-
-const downloadFile = (content: any) => {
-  var aLink = document.createElement("a");
-  aLink.download = String(new Date().getTime());
-  aLink.href = content;
-  aLink.click();
-};
-
+import { colorfulImg, browser } from "noahsark";
 const canvas = document.createElement("canvas");
-const backUpInfo = localStorage.getItem("photoInfoProps");
 
-// let imgSrc = "";
-
-export default function useMovieStyle() {
-  const imgDom: any = useRef(null);
-  const [isLoad, setIsLoad] = useState(false);
-  const [photo, setPhoto] = useState(photoProps);
-  const [photoInfo, setPhotoInfo]: any = useState(
-    backUpInfo ? JSON.parse(backUpInfo) : photoInfoProps
-  );
-
-  useEffect(() => {
-    setIsLoad(!!photo.src);
-  }, [photo]);
-
-  useEffect(() => {
-    drawImage();
-    localStorage.setItem("photoInfoProps", JSON.stringify(photoInfo));
-  }, [photoInfo]);
+export default function (_this: any) {
+  // const _this = that;
+  const DraggerProps = {
+    name: "photo",
+    multiple: false,
+    showUploadList: false,
+    beforeUpload: (file: any) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (e: any) => {
+        file.thumbUrl = e.target.result;
+        notification.success({
+          message: "图像选择成功",
+          description:
+            "本操作完全不会上传任何文件，图像仅存在本地，不会上传服务器",
+        });
+        const img = new Image();
+        img.src = file.thumbUrl;
+        img.onload = async (imgEvent: any) => {
+          const color = await colorfulImg(img.src);
+          _this.photo = {
+            width: imgEvent.path[0].width,
+            height: imgEvent.path[0].height,
+            src: imgEvent.path[0].src,
+            color,
+            img,
+          };
+          _this.drawImage();
+          _this.setState({ isLoad: true });
+        };
+      };
+      return false;
+    },
+  };
 
   /**
    * 绘制图片
@@ -61,6 +43,8 @@ export default function useMovieStyle() {
    * @param imgInfo 修改参数
    */
   const drawImage = () => {
+    const { photo } = _this;
+    const { photoInfo } = _this.state;
     const cav = canvas;
     // 初次加载state
     cav.width = photo.width;
@@ -122,16 +106,7 @@ export default function useMovieStyle() {
       positionTrB - photoInfo.fontSize / 2
     );
 
-    const result = {
-      width: photo.width,
-      height: photo.height,
-      src: photo.src,
-      color: photo.color,
-      img: photo.img,
-      imgSrc: cav.toDataURL("image/jpeg"),
-    };
-    imgDom.current.src = result.imgSrc;
-    setPhoto(result);
+    _this.imgDom.current.src = cav.toDataURL("image/jpeg");
   };
 
   /**
@@ -144,8 +119,22 @@ export default function useMovieStyle() {
     ) {
       value = 0;
     }
+    const photoInfo = _this.state.photoInfo;
     photoInfo[type] = value;
-    setPhotoInfo(deepClone(photoInfo));
+    localStorage.setItem("photoInfoProps", JSON.stringify(photoInfo));
+    _this.setState({ photoInfo });
+    _this.drawImage();
+  };
+
+  const moveRightBar = (e: any): void => {
+    let { initTop, RightBar, RightBarTitle } = _this;
+    if (initTop === 0) initTop = RightBar.current.offsetTop;
+    const maxMoveSize = window.innerHeight - RightBar.current.offsetHeight;
+    let top = e.touches[0].clientY - RightBarTitle.current.offsetHeight / 2;
+    if (top > maxMoveSize && top < window.innerHeight * 0.7 + 50) {
+      top = top - initTop;
+      RightBar.current.style.transform = `translate3d(0, ${top}px, 0px)`;
+    }
   };
 
   /**
@@ -156,51 +145,11 @@ export default function useMovieStyle() {
     if (browser.mobile) {
       message.success("请长按图片进行保存");
     } else {
-      downloadFile(photo.imgSrc);
+      var aLink = document.createElement("a");
+      aLink.download = String(new Date().getTime());
+      aLink.href = _this.imgDom.current.src;
+      aLink.click();
     }
   };
-
-  const DraggerProps = {
-    name: "photo",
-    multiple: false,
-    showUploadList: false,
-    beforeUpload: (file: any) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = (e: any) => {
-        file.thumbUrl = e.target.result;
-        notification.success({
-          message: "图像选择成功",
-          description:
-            "本操作完全不会上传任何文件，图像仅存在本地，不会上传服务器",
-        });
-        const img = new Image();
-        img.src = file.thumbUrl;
-        img.onload = async (imgEvent: any) => {
-          const color = await colorfulImg(img.src);
-          setPhoto({
-            width: imgEvent.path[0].width,
-            height: imgEvent.path[0].height,
-            src: imgEvent.path[0].src,
-            color,
-            img,
-            imgSrc: "",
-          });
-          changeInfo("color", photoInfo.color);
-        };
-      };
-      return false;
-    },
-  };
-
-  return {
-    photo,
-    photoInfo,
-    DraggerProps,
-    isLoad,
-    changeInfo,
-    save,
-    imgDom,
-    canvas,
-  };
+  return { DraggerProps, drawImage, changeInfo, moveRightBar, save };
 }
