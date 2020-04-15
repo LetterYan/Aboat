@@ -1,9 +1,7 @@
-import { notification, message } from "antd";
+import { message } from "antd";
 import { colorfulImg, browser } from "noahsark";
-const canvas = document.createElement("canvas");
 
 export default function (_this: any) {
-  // const _this = that;
   const DraggerProps = {
     name: "photo",
     multiple: false,
@@ -13,11 +11,7 @@ export default function (_this: any) {
       reader.readAsDataURL(file);
       reader.onload = (e: any) => {
         file.thumbUrl = e.target.result;
-        notification.success({
-          message: "图像选择成功",
-          description:
-            "本操作完全不会上传任何文件，图像仅存在本地，不会上传服务器",
-        });
+        message.success("加载完成，此操作不会上传任何文件");
         const img = new Image();
         img.src = file.thumbUrl;
         img.onload = async (imgEvent: any) => {
@@ -45,7 +39,7 @@ export default function (_this: any) {
   const drawImage = () => {
     const { photo } = _this;
     const { photoInfo } = _this.state;
-    const cav = canvas;
+    const cav = _this.canvas.current;
     // 初次加载state
     cav.width = photo.width;
     cav.height = photo.height + (photoInfo.bottom + photoInfo.top);
@@ -105,37 +99,43 @@ export default function (_this: any) {
       positionLrR,
       positionTrB - photoInfo.fontSize / 2
     );
-
-    _this.imgDom.current.src = cav.toDataURL("image/jpeg");
   };
 
+  let time = true;
   /**
    * 修改图片信息
    */
   const changeInfo = (type: string, value: number | string | boolean) => {
-    if (
-      /top|bottom|padding|fontSize/.test(type) &&
-      (value === "" || value === null)
-    ) {
-      value = 0;
+    if (time) {
+      time = false;
+      if (
+        /top|bottom|padding|fontSize/.test(type) &&
+        (value === "" || value === null)
+      ) {
+        value = 0;
+      }
+      const photoInfo = _this.state.photoInfo;
+      photoInfo[type] = value;
+      localStorage.setItem("photoInfoProps", JSON.stringify(photoInfo));
+      _this.setState({ photoInfo });
+      requestAnimationFrame(_this.drawImage);
+      setTimeout(() => (time = true), 50);
     }
-    const photoInfo = _this.state.photoInfo;
-    photoInfo[type] = value;
-    localStorage.setItem("photoInfoProps", JSON.stringify(photoInfo));
-    _this.setState({ photoInfo });
-    _this.drawImage();
   };
 
-  const moveRightBar = (e: any): void => {
-    let { initTop, RightBar, RightBarTitle } = _this;
-    if (initTop === 0) initTop = RightBar.current.offsetTop;
-    const maxMoveSize = window.innerHeight - RightBar.current.offsetHeight;
-    let top = e.touches[0].clientY - RightBarTitle.current.offsetHeight / 2;
-    if (top > maxMoveSize && top < window.innerHeight * 0.7 + 50) {
-      top = top - initTop;
-      RightBar.current.style.transform = `translate3d(0, ${top}px, 0px)`;
-    }
-  };
+  /**
+   * 废弃的拖动元素
+   */
+  // const moveRightBar = (e: any): void => {
+  //   let { initTop, RightBar, RightBarTitle } = _this;
+  //   if (initTop === 0) initTop = RightBar.current.offsetTop;
+  //   const maxMoveSize = window.innerHeight - RightBar.current.offsetHeight;
+  //   let top = e.touches[0].clientY - RightBarTitle.current.offsetHeight / 2;
+  //   if (top > maxMoveSize && top < window.innerHeight * 0.7 + 50) {
+  //     top = top - initTop;
+  //     RightBar.current.style.transform = `translate3d(0, ${top}px, 0px)`;
+  //   }
+  // };
 
   /**
    * 保存图片
@@ -147,9 +147,9 @@ export default function (_this: any) {
     } else {
       var aLink = document.createElement("a");
       aLink.download = String(new Date().getTime());
-      aLink.href = _this.imgDom.current.src;
+      aLink.href = _this.canvas.current.toDataURL("image/png");
       aLink.click();
     }
   };
-  return { DraggerProps, drawImage, changeInfo, moveRightBar, save };
+  return { DraggerProps, drawImage, changeInfo, save };
 }

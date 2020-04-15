@@ -8,7 +8,6 @@ import GlobalStyle from "theme/createGlobalStyle";
 import "./app.less";
 
 function App() {
-
   return (
     <Router>
       <ThemeProvider theme={Themes.default}>

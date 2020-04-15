@@ -8,7 +8,6 @@ import {
   Slider,
   Tabs,
 } from "antd";
-import { moveElement } from "utils";
 import hook from "./hook";
 import "./style.less";
 
@@ -62,14 +61,11 @@ const margin = <>&nbsp;&nbsp;</>;
 
 export default class MovieStyle extends Component {
   initTop = 0;
-  imgDom: any = React.createRef();
-  RightBar: any = React.createRef();
-  RightBarTitle: any = React.createRef();
+  canvas: any = React.createRef();
   photo = photoProps;
   DraggerProps = hook(this).DraggerProps;
   drawImage = hook(this).drawImage;
   changeInfo = hook(this).changeInfo;
-  moveRightBar = hook(this).moveRightBar;
   save = hook(this).save;
   state = {
     isLoad: false,
@@ -126,17 +122,14 @@ export default class MovieStyle extends Component {
     window.onresize = () => {
       const checkMode = document.documentElement.clientWidth <= 1080;
       this.setState({ mobileMode: checkMode });
-      if (!checkMode) {
-        console.log(this.RightBar);
-        this.RightBar.current.style.top = "unset";
-        this.RightBar.current.style.left = "unset";
-      }
     };
   }
 
+  timer: any = null;
+
   render() {
     const { DraggerProps, photo, changeInfo, save, colorPicker } = this;
-    let { imgDom, RightBar, RightBarTitle } = this;
+    let { canvas, timer } = this;
     const { isLoad, mobileMode, photoInfo } = this.state;
     const moduleList = [
       {
@@ -287,26 +280,33 @@ export default class MovieStyle extends Component {
       <div className="MovieStyle">
         {mobileMode && footerBtns}
         <div className={`Content  ${isLoad && "LoadContent"}`}>
-          <img alt="" ref={imgDom} id="canvas" hidden={!isLoad} />
+          <div className="canvasBox">
+            <img
+              alt=""
+              src="null"
+              onTouchStart={(e: any) => {
+                const img = e.target;
+                timer = setTimeout(
+                  () => (img.src = this.canvas.current.toDataURL("image/png")),
+                  500
+                );
+              }}
+              onContextMenu={(e: any) => {
+                e.target.src = this.canvas.current.toDataURL("image/png");
+              }}
+              onTouchEnd={() => clearTimeout(timer)}
+              hidden={!isLoad}
+            />
+            <canvas ref={canvas} id="canvas" hidden={!isLoad}></canvas>
+          </div>
           {!isLoad && (
             <Dragger {...DraggerProps}>
               <span className="Upload">选择图像</span>
             </Dragger>
           )}
         </div>
-        <div ref={RightBar} className={`RightBar ${isLoad && "LoadRight"}`}>
-          <div
-            ref={RightBarTitle}
-            className="Title"
-            onTouchMove={this.moveRightBar}
-            onMouseMove={() => {
-              if (mobileMode) {
-                moveElement(RightBarTitle.current, RightBar.current, true);
-              }
-            }}
-          >
-            工作台
-          </div>
+        <div className={`RightBar ${isLoad && "LoadRight"}`}>
+          <div className="Title">工作台</div>
           <div className={`RightBarContent ${!isLoad && "disabled"}`}>
             {this.createModule(moduleList)}
             <div hidden={mobileMode} className="ItemModule">
