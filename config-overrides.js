@@ -11,7 +11,7 @@ module.exports = override(
     javascriptEnabled: true,
     // strictMath: true,
     // noIeCompat: true,
-    localIdentName: "[local]--[hash:base64:5]",
+    // localIdentName: "[local]--[hash:base64:5]",
     // modifyVars: { "@primary-color": "#900001" },
   })
 );

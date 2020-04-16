@@ -5,10 +5,10 @@ import { colorfulImg } from "noahsark";
 import "./style.less";
 
 const imgList = require
-  .context("../../static/image/carousel/")
+  .context("static/image/carousel/")
   .keys()
   .map((str: any) => ({
-    path: require(`../../static/image/carousel/${str.replace("./", "")}`),
+    path: require(`static/image/carousel/${str.replace("./", "")}`),
     color: "",
   }));
 
