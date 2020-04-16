@@ -294,10 +294,18 @@ export default class MovieStyle extends Component {
     ];
   };
 
+  windowSize = true;
+
   componentDidMount() {
     window.onresize = () => {
-      const checkMode = document.documentElement.clientWidth <= 1080;
-      this.setState({ mobileMode: checkMode });
+      if (this.windowSize) {
+        this.windowSize = false;
+        const checkMode = document.documentElement.clientWidth <= 1080;
+        this.setState({ mobileMode: checkMode });
+        setTimeout(() => {
+          this.windowSize = true;
+        }, 500);
+      }
     };
   }
 
