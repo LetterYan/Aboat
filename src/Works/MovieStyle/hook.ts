@@ -192,7 +192,10 @@ export default function (_this: any) {
     // img更新状态
     if (_this.state.lastUpdate) _this.setState({ lastUpdate: false });
     if (time) {
-      time = false;
+      if (!/context/.test(type)) {
+        time = false;
+        setTimeout(() => (time = true), 10);
+      }
       if (
         /top|bottom|padding|fontSize/.test(type) &&
         (value === "" || value === null)
@@ -202,10 +205,9 @@ export default function (_this: any) {
       const configData = _this.state.configData;
       configData[type] = value;
       _this.setState({ configData });
+      // 不知道有没有用，反正先写上就对了
       requestAnimationFrame(_this.drawImage);
-      localStorage.setItem("photoInfoProps", JSON.stringify(configData));
-      // 时间高于10会出现打字输入被间断
-      setTimeout(() => (time = true), 10);
+      localStorage.setItem("configDataProps", JSON.stringify(configData));
     }
   };
 

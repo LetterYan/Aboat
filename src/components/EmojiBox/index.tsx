@@ -1,7 +1,9 @@
 import React from "react";
+import { Tabs } from "antd";
 import { browser } from "noahsark";
 import { emojis } from "utils";
 import "./style.less";
+const { TabPane } = Tabs;
 
 const defaultProps = {
   callback: () => {},
@@ -9,21 +11,26 @@ const defaultProps = {
 
 export default function EmojiBox(props: any = defaultProps) {
   const { callback } = props;
-  const renderList = emojis;
 
   return (
-    <div className={`EmojiWrapper ${browser.mobile && "EmojiMobile"}`}>
-      {renderList.map((item) => {
-        return (
-          <div
-            key={item.name}
-            className="emojiBox"
-            onClick={() => callback(item)}
-          >
-            <img className="emoji" src={item.path} alt={item.name} />
+    <Tabs tabPosition="bottom" animated={false}>
+      {emojis.map((emoji: any, i: number) => (
+        <TabPane tab={emoji.title} key={String(i)}>
+          <div className={`EmojiWrapper ${browser.mobile && "EmojiMobile"}`}>
+            {emoji.icons.map((item: any) => {
+              return (
+                <div
+                  key={item.name}
+                  className="emojiBox"
+                  onClick={() => callback(item)}
+                >
+                  <img className="emoji" src={item.path} alt={item.name} />
+                </div>
+              );
+            })}
           </div>
-        );
-      })}
-    </div>
+        </TabPane>
+      ))}
+    </Tabs>
   );
 }

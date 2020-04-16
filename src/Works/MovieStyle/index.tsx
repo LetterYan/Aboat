@@ -287,6 +287,10 @@ export default class MovieStyle extends Component {
           </>,
         ],
       },
+      {
+        title: "Emoji 尚未开发",
+        child: [<>颜色{margin} rgb(21, 21, 21)</>],
+      },
     ];
   };
 
