@@ -16,16 +16,15 @@ export default function Home() {
   const [current, setCurrent] = useState(0);
   const [bgColor, setBgColor] = useState("");
 
-  const getColor = async () => {
-    if (imgList[current].color) {
-      setBgColor(imgList[current].color);
-    } else {
-      imgList[current].color = await colorfulImg(imgList[current].path);
-      setBgColor(imgList[current].color);
-    }
-  };
-
   useEffect(() => {
+    const getColor = async () => {
+      if (imgList[current].color) {
+        setBgColor(imgList[current].color);
+      } else {
+        imgList[current].color = await colorfulImg(imgList[current].path);
+        setBgColor(imgList[current].color);
+      }
+    };
     getColor();
   }, [current]);
 
