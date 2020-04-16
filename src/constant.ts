@@ -21,6 +21,7 @@ const emojis = require
     const image = new Image();
     const name = str.replace(/(.\/)|(.svg)/g, "");
     image.src = require(`static/svg/emoji/${str.replace(/(.\/)/g, "")}`);
+    image.style.fontSize = "0";
     emojisSet[name] = image;
     return {
       name,

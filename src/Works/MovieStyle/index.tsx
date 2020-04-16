@@ -8,6 +8,7 @@ import {
   Slider,
   Tabs,
   Popover,
+  message,
 } from "antd";
 import { SmileOutlined } from "@ant-design/icons";
 import { EmojiBox } from "components";
@@ -206,7 +207,7 @@ export default class MovieStyle extends Component {
         title: "文字",
         child: [
           <Input
-            // addonAfter={EmojiPopover()}
+            addonAfter={EmojiPopover()}
             className="InputContext"
             size="small"
             placeholder="你好？少侠！"
@@ -324,9 +325,9 @@ export default class MovieStyle extends Component {
                   500
                 );
               }}
-              onContextMenu={(e: any) => {
-                e.target.src = this.canvas.current.toDataURL("image/png");
-              }}
+              onContextMenu={(e: any) =>
+                (e.target.src = this.canvas.current.toDataURL("image/png"))
+              }
               onTouchEnd={() => clearTimeout(timer)}
             />
             <canvas ref={canvas} id="canvas"></canvas>

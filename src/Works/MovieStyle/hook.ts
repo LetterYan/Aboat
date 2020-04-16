@@ -2,6 +2,8 @@ import { message } from "antd";
 import { colorfulImg, browser } from "noahsark";
 import { emojisSet } from "constant";
 
+const emojiBefor = "emoji-";
+
 export default function (_this: any) {
   const DraggerProps = {
     name: "photo",
@@ -75,60 +77,109 @@ export default function (_this: any) {
     ctx.font = `${photoInfo.fontSize}px Arial`;
     ctx.textBaseline = "top";
 
-    // const reg = new RegExp(/\[([^[\]]*)\]/g);
-    // const textList = photoInfo.context.split(reg);
+    let str = photoInfo.context; // 文字
+    let textWidth: number = 0; // 文字长度 用于给emoji空出位置
+    const reg = new RegExp(/\[([^[\]]*)\]/g); // 匹配 []
+    const arr = str.match(reg); // 取出 []
+    const num = Math.random(); // 用一个随机数用于间隔 emoji  ---ps: 秒啊！
 
-    // let textWidth: number = 0;
-    // textList.map((item: string) => {
-    //   if (item.match("c-")) {
-    //     textWidth += photoInfo.fontSize;
-    //     const emojie = emojisSet[item];
-    //     emojie.width = photoInfo.fontSize + "px";
-    //     ctx.drawImage(
-    //       emojie,
-    //       textWidth,
-    //       photoInfo.top / 2 - photoInfo.fontSize / 2,
-    //       photoInfo.fontSize,
-    //       photoInfo.fontSize
-    //     );
-    //   } else {
-    //     const text = ctx.measureText(item);
-    //     textWidth += text.width;
-    //   }
-    // });
-
-    const text = ctx.measureText(photoInfo.context);
-    let positionTrB: number = 0;
-    let positionLrR: number = 0;
-    if (!photoInfo.textCenter) {
+    /**
+     * 显示方位
+     */
+    const positionContent = (
+      width: number = 0,
+      type: string = "text",
+      preWidth: number = 0
+    ) => {
+      let positionLrR: number = 0; // 左右
+      let positionTrB: number = 0; // 上下
+      const { photoInfo } = _this.state;
       // 非正中央显示
-      positionTrB =
-        photoInfo.topOrBottom === "top"
-          ? photoInfo.top / 2
-          : cav.height - photoInfo.bottom / 2;
-
-      switch (photoInfo.leftOrRight) {
-        case "left":
-          positionLrR = photoInfo.padding;
-          break;
-        case "right":
-          positionLrR = cav.width - photoInfo.padding - text.width;
-          break;
-        case "center":
-          positionLrR = cav.width / 2 - text.width / 2;
-          break;
+      if (!photoInfo.textCenter) {
+        // 上下位置
+        if (photoInfo.topOrBottom === "top") {
+          positionTrB = photoInfo.top / 2 - photoInfo.fontSize / 2;
+        } else {
+          positionTrB =
+            cav.height - photoInfo.bottom / 2 - photoInfo.fontSize / 2 + 10;
+        }
+        // 左右位置
+        switch (photoInfo.leftOrRight) {
+          case "left":
+            positionLrR += photoInfo.padding + width;
+            break;
+          case "right":
+            positionLrR += width + (cav.width - preWidth) - photoInfo.padding;
+            break;
+          case "center":
+            positionLrR = cav.width / 2 - (preWidth / 2 - width);
+            break;
+        }
+      } else {
+        // 正中央显示
+        positionTrB = cav.height / 2 - photoInfo.fontSize / 2;
+        positionLrR = cav.width / 2 - (preWidth / 2 - width);
       }
-    } else {
-      // 正中央显示
-      positionTrB = cav.height / 2;
-      positionLrR = cav.width / 2 - text.width / 2;
+      return { positionLrR, positionTrB };
+    };
+
+    // 处理字符串
+    arr &&
+      arr.forEach((item: string) => {
+        if (item.match(emojiBefor)) {
+          const newStr = item.split(reg).join("");
+          str = str.replace(item, `${num}${newStr}${num}`);
+        }
+      });
+
+    const textList = str.split(num);
+    const fixSize = 20; // 修正emoji的高低大小
+
+    let preWidth: number = 0;
+    if (/center|right/.test(photoInfo.leftOrRight) || photoInfo.textCenter) {
+      textList.map((item: string) => {
+        if (item) {
+          if (item.match(emojiBefor) && emojisSet[item]) {
+            preWidth += photoInfo.fontSize + fixSize;
+          } else {
+            const text = ctx.measureText(item, "text");
+            preWidth += text.width;
+          }
+        }
+      });
     }
 
-    ctx.fillText(
-      photoInfo.context,
-      positionLrR,
-      positionTrB - photoInfo.fontSize / 2
-    );
+    textList.map((item: string): void => {
+      if (item) {
+        if (item.match(emojiBefor) && emojisSet[item]) {
+          const emojie = emojisSet[item];
+          emojie.width = photoInfo.fontSize + "px";
+          const fontSize = photoInfo.fontSize + fixSize;
+          const { positionLrR, positionTrB } = positionContent(
+            textWidth,
+            "emoji",
+            preWidth
+          );
+          ctx.drawImage(
+            emojie,
+            positionLrR,
+            positionTrB - fixSize,
+            fontSize,
+            fontSize
+          );
+          textWidth += fontSize;
+        } else {
+          const text = ctx.measureText(item, "text");
+          const { positionLrR, positionTrB } = positionContent(
+            textWidth,
+            "emoji",
+            preWidth
+          );
+          ctx.fillText(item, positionLrR, positionTrB);
+          textWidth += text.width;
+        }
+      }
+    });
   };
 
   let time: boolean = true;
