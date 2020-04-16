@@ -1,6 +1,6 @@
 import React from "react";
 import { browser } from "noahsark";
-import { emojis } from "constant";
+import { emojis } from "utils";
 import "./style.less";
 
 const defaultProps = {
@@ -9,7 +9,6 @@ const defaultProps = {
 
 export default function EmojiBox(props: any = defaultProps) {
   const { callback } = props;
-
   const renderList = emojis;
 
   return (
@@ -21,12 +20,7 @@ export default function EmojiBox(props: any = defaultProps) {
             className="emojiBox"
             onClick={() => callback(item)}
           >
-            <img
-              className="emoji"
-              src={item.path}
-              alt={item.name}
-              key={item.name}
-            />
+            <img className="emoji" src={item.path} alt={item.name} />
           </div>
         );
       })}

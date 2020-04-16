@@ -1,8 +1,6 @@
 import { message } from "antd";
 import { colorfulImg, browser } from "noahsark";
-import { emojisSet } from "constant";
-
-const emojiBefor = "emoji-";
+import { emojiBefor, emojisSet } from "utils";
 
 export default function (_this: any) {
   const DraggerProps = {
@@ -30,10 +28,13 @@ export default function (_this: any) {
             img,
           };
           _this.drawImage();
-          message.success({
-            content: "加载成功！此操作不会上传任何文件",
-            key: "loading",
-          });
+          setTimeout(() => {
+            message.success({
+              duration: 3,
+              content: "加载成功！此操作不会上传任何文件",
+              key: "loading",
+            });
+          }, 500);
           _this.setState({ isLoad: true });
         };
       };
@@ -86,11 +87,7 @@ export default function (_this: any) {
     /**
      * 显示方位
      */
-    const positionContent = (
-      width: number = 0,
-      type: string = "text",
-      preWidth: number = 0
-    ) => {
+    const positionContent = (width: number = 0, preWidth: number = 0) => {
       let positionLrR: number = 0; // 左右
       let positionTrB: number = 0; // 上下
       const { photoInfo } = _this.state;
@@ -124,20 +121,22 @@ export default function (_this: any) {
     };
 
     // 处理字符串
-    arr &&
-      arr.forEach((item: string) => {
+    if (arr)
+      for (let i = 0; i < arr.length; i++) {
+        const item = arr[i];
         if (item.match(emojiBefor)) {
           const newStr = item.split(reg).join("");
           str = str.replace(item, `${num}${newStr}${num}`);
         }
-      });
+      }
 
     const textList = str.split(num);
     const fixSize = 20; // 修正emoji的高低大小
 
     let preWidth: number = 0;
     if (/center|right/.test(photoInfo.leftOrRight) || photoInfo.textCenter) {
-      textList.map((item: string) => {
+      for (let i = 0; i < textList.length; i++) {
+        const item = textList[i];
         if (item) {
           if (item.match(emojiBefor) && emojisSet[item]) {
             preWidth += photoInfo.fontSize + fixSize;
@@ -146,10 +145,11 @@ export default function (_this: any) {
             preWidth += text.width;
           }
         }
-      });
+      }
     }
 
-    textList.map((item: string): void => {
+    for (let i = 0; i < textList.length; i++) {
+      const item = textList[i];
       if (item) {
         if (item.match(emojiBefor) && emojisSet[item]) {
           const emojie = emojisSet[item];
@@ -157,7 +157,6 @@ export default function (_this: any) {
           const fontSize = photoInfo.fontSize + fixSize;
           const { positionLrR, positionTrB } = positionContent(
             textWidth,
-            "emoji",
             preWidth
           );
           ctx.drawImage(
@@ -172,14 +171,13 @@ export default function (_this: any) {
           const text = ctx.measureText(item, "text");
           const { positionLrR, positionTrB } = positionContent(
             textWidth,
-            "emoji",
             preWidth
           );
           ctx.fillText(item, positionLrR, positionTrB);
           textWidth += text.width;
         }
       }
-    });
+    }
   };
 
   let time: boolean = true;
@@ -204,20 +202,6 @@ export default function (_this: any) {
       setTimeout(() => (time = true), 10);
     }
   };
-
-  /**
-   * 废弃的拖动元素
-   */
-  // const moveRightBar = (e: any): void => {
-  //   let { initTop, RightBar, RightBarTitle } = _this;
-  //   if (initTop === 0) initTop = RightBar.current.offsetTop;
-  //   const maxMoveSize = window.innerHeight - RightBar.current.offsetHeight;
-  //   let top = e.touches[0].clientY - RightBarTitle.current.offsetHeight / 2;
-  //   if (top > maxMoveSize && top < window.innerHeight * 0.7 + 50) {
-  //     top = top - initTop;
-  //     RightBar.current.style.transform = `translate3d(0, ${top}px, 0px)`;
-  //   }
-  // };
 
   /**
    * 保存图片

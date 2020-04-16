@@ -8,7 +8,6 @@ import {
   Slider,
   Tabs,
   Popover,
-  message,
 } from "antd";
 import { SmileOutlined } from "@ant-design/icons";
 import { EmojiBox } from "components";
