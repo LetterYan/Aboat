@@ -8,9 +8,11 @@ import {
   Slider,
   Tabs,
   Popover,
+  message,
 } from "antd";
 import { SmileOutlined } from "@ant-design/icons";
 import { EmojiBox } from "components";
+import { browser } from "noahsark";
 import hook from "./hook";
 import "./style.less";
 
@@ -25,7 +27,7 @@ const photoProps = {
   img: new Image(),
 };
 
-const photoInfoProps = {
+const configDataProps = {
   top: 150,
   bottom: 150,
   padding: 30,
@@ -40,7 +42,7 @@ const photoInfoProps = {
   leftOrRight: "right",
 };
 
-const backUpInfo = localStorage.getItem("photoInfoProps");
+const backUpInfo = localStorage.getItem("configDataProps");
 
 const TextSwitch = [
   {
@@ -63,18 +65,20 @@ const TextSwitch = [
 const margin = <>&nbsp;&nbsp;</>;
 
 export default class MovieStyle extends Component {
+  photo = photoProps;
   initTop: number = 0;
   timer: any = null;
-  photo = photoProps;
+  imgDom: any = React.createRef();
   canvas: any = React.createRef();
   DraggerProps = hook(this).DraggerProps;
   drawImage = hook(this).drawImage;
   changeInfo = hook(this).changeInfo;
   save = hook(this).save;
   state = {
+    lastUpdate: false,
     isLoad: false,
     hiddenEmojiBox: false,
-    photoInfo: backUpInfo ? JSON.parse(backUpInfo) : photoInfoProps,
+    configData: backUpInfo ? JSON.parse(backUpInfo) : configDataProps,
     mobileMode: document.documentElement.clientWidth <= 1080,
   };
 
@@ -83,7 +87,7 @@ export default class MovieStyle extends Component {
       <input
         className="colorPicker"
         type="color"
-        value={this.state.photoInfo[value]}
+        value={this.state.configData[value]}
         onChange={(e: any) => this.changeInfo(value, e.target.value)}
       />
     );
@@ -127,8 +131,8 @@ export default class MovieStyle extends Component {
 
   clickEmoji = (emoji: any) => {
     const { changeInfo } = this;
-    let { photoInfo } = this.state;
-    changeInfo("context", `${photoInfo.context}[${emoji.name}]`);
+    let { configData } = this.state;
+    changeInfo("context", `${configData.context}[${emoji.name}]`);
     this.setState({ hiddenEmojiBox: false });
   };
 
@@ -148,7 +152,7 @@ export default class MovieStyle extends Component {
   );
 
   moduleList = () => {
-    const { photoInfo } = this.state;
+    const { configData } = this.state;
     const { photo, colorPicker, changeInfo, EmojiPopover } = this;
     return [
       {
@@ -163,7 +167,7 @@ export default class MovieStyle extends Component {
             高度{margin}
             {photo.width}
             {margin}->{margin}
-            {photo.height + photoInfo.top + photoInfo.bottom}
+            {photo.height + configData.top + configData.bottom}
           </>,
           <>
             平均色值{margin}
@@ -183,21 +187,21 @@ export default class MovieStyle extends Component {
           <>
             上边{margin}
             <InputNumber
-              value={photoInfo.top}
+              value={configData.top}
               size="small"
               min={0}
               onChange={(value = 0) => changeInfo("top", value)}
-              defaultValue={photoInfo.top}
+              defaultValue={configData.top}
             />
           </>,
           <>
             下边{margin}
             <InputNumber
-              value={photoInfo.bottom}
+              value={configData.bottom}
               size="small"
               min={0}
               onChange={(value = 0) => changeInfo("bottom", value)}
-              defaultValue={photoInfo.bottom}
+              defaultValue={configData.bottom}
             />
           </>,
         ],
@@ -211,7 +215,7 @@ export default class MovieStyle extends Component {
             size="small"
             placeholder="你好？少侠！"
             onChange={(e) => changeInfo("context", e.target.value)}
-            value={photoInfo.context}
+            value={configData.context}
           />,
           <>
             颜色{margin}
@@ -222,7 +226,7 @@ export default class MovieStyle extends Component {
             <InputNumber
               min={0}
               size="small"
-              value={photoInfo.padding}
+              value={configData.padding}
               onChange={(val = 0) => changeInfo("padding", val)}
             />
           </>,
@@ -231,7 +235,7 @@ export default class MovieStyle extends Component {
             <InputNumber
               min={0}
               size="small"
-              value={photoInfo.fontSize}
+              value={configData.fontSize}
               onChange={(val = 0) => changeInfo("fontSize", val)}
             />
           </>,
@@ -244,8 +248,8 @@ export default class MovieStyle extends Component {
             {TextSwitch.map((item) => (
               <div className="Block" key={item.type}>
                 <Radio.Group
-                  disabled={photoInfo.textCenter}
-                  value={photoInfo[item.type]}
+                  disabled={configData.textCenter}
+                  value={configData[item.type]}
                   onChange={(e) => changeInfo(item.type, e.target.value)}
                 >
                   {item.values.map((check) => (
@@ -258,7 +262,7 @@ export default class MovieStyle extends Component {
             ))}
           </>,
           <Checkbox
-            checked={photoInfo.textCenter}
+            checked={configData.textCenter}
             onChange={(e) => changeInfo("textCenter", e.target.checked)}
           >
             中央显示
@@ -276,7 +280,7 @@ export default class MovieStyle extends Component {
             透明度{margin}
             <div style={{ paddingLeft: "10px" }}>
               <Slider
-                value={photoInfo.maskOpacity}
+                value={configData.maskOpacity}
                 onChange={(value: any) => changeInfo("maskOpacity", value)}
               />
             </div>
@@ -295,8 +299,8 @@ export default class MovieStyle extends Component {
 
   render() {
     const { DraggerProps, save, moduleList } = this;
-    let { canvas, timer } = this;
-    const { isLoad, mobileMode } = this.state;
+    let { canvas, timer, imgDom } = this;
+    const { isLoad, mobileMode, lastUpdate } = this.state;
 
     const footerBtns = (
       <div className="footerBtns">
@@ -317,15 +321,17 @@ export default class MovieStyle extends Component {
             <img
               alt=""
               src="null"
-              onTouchStart={(e: any) => {
-                const img = e.target;
-                timer = setTimeout(
-                  () => (img.src = this.canvas.current.toDataURL("image/png")),
-                  500
-                );
+              ref={imgDom}
+              onTouchStart={() => {
+                timer = setTimeout(() => {
+                  !lastUpdate &&
+                    message.info("请先点击保存按钮生成无损图，然后长按下载");
+                }, 500);
               }}
-              onContextMenu={(e: any) =>
-                (e.target.src = this.canvas.current.toDataURL("image/png"))
+              onContextMenu={() =>
+                !lastUpdate &&
+                !browser.mobile &&
+                message.info("请先点击保存按钮生成无损图，然后长按下载")
               }
               onTouchEnd={() => clearTimeout(timer)}
             />

@@ -3,13 +3,14 @@ const AV = require("leancloud-storage/live-query");
 
 export const init = () => {
   message.config({
-    duration: 2,
+    top: 55,
+    duration: 3,
     maxCount: 3,
   });
 
   notification.config({
     placement: "topRight",
-    bottom: 50,
+    top: 55,
     duration: 5,
   });
 

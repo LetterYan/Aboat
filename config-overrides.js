@@ -1,4 +1,5 @@
 const { override, fixBabelImports, addLessLoader } = require("customize-cra");
+process.env.GENERATE_SOURCEMAP = "false";
 
 module.exports = override(
   fixBabelImports("import", {
@@ -8,6 +9,8 @@ module.exports = override(
   }),
   addLessLoader({
     javascriptEnabled: true,
+    strictMath: true,
+    noIeCompat: true,
     localIdentName: "[local]--[hash:base64:5]",
     // modifyVars: { "@primary-color": "#900001" },
   })
