@@ -20,10 +20,11 @@ export default function (_this: any) {
         img.src = file.thumbUrl;
         img.onload = async (imgEvent: any) => {
           const color = await colorfulImg(img.src);
+          const Element = imgEvent.path ? imgEvent.path[0] : imgEvent.target;
           _this.photo = {
-            width: imgEvent.path[0].width,
-            height: imgEvent.path[0].height,
-            src: imgEvent.path[0].src,
+            width: Element.width,
+            height: Element.height,
+            src: Element.src,
             color,
             img,
           };
@@ -135,7 +136,7 @@ export default function (_this: any) {
       }
 
     const textList = str.split(num);
-    const fixSize = 20; // 修正emoji的高低大小
+    const fixSize = browser.isChrome ? 10 : 0; // 修正emoji的高低大小
 
     let preWidth: number = 0;
     if (/center|right/.test(configData.leftOrRight) || configData.textCenter) {

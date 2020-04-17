@@ -7,7 +7,7 @@ import "./style.less";
 const imgList = require
   .context("static/image/carousel/")
   .keys()
-  .map((str: any) => ({
+  .map((str: string) => ({
     path: require(`static/image/carousel/${str.replace("./", "")}`),
     color: "",
   }));

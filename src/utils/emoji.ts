@@ -41,7 +41,13 @@ const icons = require
     };
   });
 
-const emojis: any[] = [
+const emojis: {
+  title: string;
+  icons: {
+    name: string;
+    path: string;
+  }[];
+}[] = [
   { title: "emoji", icons: coolEmoji },
   { title: "icon", icons },
 ];

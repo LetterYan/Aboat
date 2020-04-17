@@ -129,7 +129,7 @@ export default class MovieStyle extends Component {
     }
   };
 
-  clickEmoji = (emoji: any) => {
+  clickEmoji = (emoji: { name: string; path: string }) => {
     const { changeInfo } = this;
     let { configData } = this.state;
     changeInfo("context", `${configData.context}[${emoji.name}]`);
@@ -145,7 +145,13 @@ export default class MovieStyle extends Component {
       onVisibleChange={(open: boolean) =>
         this.setState({ hiddenEmojiBox: open })
       }
-      content={<EmojiBox callback={(reslut: any) => this.clickEmoji(reslut)} />}
+      content={
+        <EmojiBox
+          callback={(reslut: { name: string; path: string }) =>
+            this.clickEmoji(reslut)
+          }
+        />
+      }
     >
       <SmileOutlined />
     </Popover>
@@ -281,7 +287,7 @@ export default class MovieStyle extends Component {
             <div style={{ paddingLeft: "10px" }}>
               <Slider
                 value={configData.maskOpacity}
-                onChange={(value: any) => changeInfo("maskOpacity", value)}
+                onChange={(value) => changeInfo("maskOpacity", Number(value))}
               />
             </div>
           </>,
@@ -359,10 +365,8 @@ export default class MovieStyle extends Component {
           <div className="Title">工作台</div>
           <div className={`RightBarContent ${!isLoad && "disabled"}`}>
             {this.createModule(moduleList())}
-            <div hidden={mobileMode} className="ItemModule">
-              {footerBtns}
-            </div>
           </div>
+          {!mobileMode && footerBtns}
         </div>
       </div>
     );
