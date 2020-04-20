@@ -1,0 +1,210 @@
+@bordercolor: rgba(255, 255, 255, 0.2);
+.imgDom {
+  max-width: 100%;
+  max-height: 300px;
+  margin: 0 auto;
+  display: block;
+}
+.MovieStyle {
+  display: flex;
+  justify-content: space-between;
+  background: rgba(17, 17, 17, 0.8);
+  .RightBar,
+  .Content {
+    border: 1px solid @bordercolor;
+    backdrop-filter: blur(10px);
+    height: calc(100vh - 50px);
+  }
+  .Content {
+    width: 100%;
+    font-size: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: width 0.3s ease;
+    .Upload {
+      user-select: none;
+      width: 200px;
+      height: 100px;
+      line-height: 100px;
+      text-align: center;
+      display: inline-block;
+    }
+    .canvas {
+      max-width: 100%;
+      max-width: 95%;
+      max-height: calc(100vh - 100px);
+    }
+  }
+  .RightBar {
+    width: 20%;
+    padding: 20px;
+    padding-top: 0;
+    background: rgba(17, 17, 17, 0.8);
+    border-left: none;
+    min-height: calc(100vh - 50px);
+    transition: all 0.3s ease;
+    transform: translate3d(100%, 0px, 0px);
+    position: absolute;
+    right: 0;
+    z-index: 999;
+    .Title {
+      user-select: none;
+      padding: 15px 0;
+      padding-top: 35px;
+      font-size: 22px;
+      line-height: 28px;
+      border-bottom: 2px solid @bordercolor;
+    }
+    .RightBarContent {
+      overflow-y: scroll;
+      height: calc(100vh - 210px);
+      -ms-overflow-style: none;
+      -webkit-overflow-scrolling: touch;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+      .ItemModule {
+        padding-top: 15px;
+        line-height: 18px;
+        font-size: 14px;
+        color: #8d8d8d;
+        > div {
+          padding: 5px 0;
+        }
+        .ModuleTitle {
+          color: #ffffff;
+          font-size: 16px;
+          line-height: 30px;
+          padding: 0;
+        }
+        .colorPicker {
+          border: none;
+          background: transparent;
+          padding: 0;
+          height: 25px;
+          width: 40px;
+          vertical-align: sub;
+        }
+        .color {
+          word-break: break-all;
+          border: 2px solid #ffffff;
+          padding: 0 5px;
+        }
+        .Block {
+          margin: 10px 0;
+        }
+      }
+    }
+  }
+  .LoadContent {
+    width: 80%;
+  }
+  .LoadRight {
+    transform: translate3d(0, 0, 0);
+  }
+  .footerBtns {
+    color: #ffffff;
+    position: absolute;
+    bottom: 20px;
+    right: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    user-select: none;
+    .save,
+    .replitImg {
+      height: 35px;
+      line-height: 34px;
+      width: 40%;
+      text-align: center;
+      border: 1px solid @bordercolor;
+      transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+      cursor: pointer;
+      &:active {
+        background: rgba(255, 255, 255, 0.1);
+      }
+    }
+  }
+}
+
+.Tabs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 20px;
+}
+
+@media (max-width: 1080px) {
+  .MovieStyle {
+    display: initial;
+    .Content {
+      position: fixed;
+      top: calc(100vh - 75vh - 15px);
+      border: none;
+      width: 100%;
+      height: 75vh;
+      .canvas {
+        max-height: 75vh;
+      }
+    }
+    .RightBar {
+      padding: 0;
+      width: 100%;
+      border-right: none;
+      background: #000000;
+      transform: translate3d(0, 0px, 0px);
+      height: unset;
+      height: 125px;
+      min-height: unset;
+      top: 50px;
+      .Title {
+        display: none;
+      }
+      .RightBarContent {
+        overflow-x: scroll;
+        height: unset;
+        padding-bottom: 0;
+        .ItemModule {
+          padding: 10px 20px 0px;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          height: 70px;
+          > div {
+            width: 50%;
+          }
+          .InputContext {
+            width: 70%;
+          }
+          .Block {
+            margin: 0;
+          }
+        }
+        .disabled {
+          opacity: 0.3;
+          pointer-events: none;
+        }
+      }
+    }
+    .footerBtns {
+      position: fixed;
+      top: 0;
+      z-index: 999;
+      height: 50px;
+      width: 40vw;
+      padding: 0;
+      right: 20px;
+      font-size: 14px;
+      .save,
+      .replitImg {
+        width: 50%;
+      }
+      .replitImg {
+        border-left: none;
+      }
+    }
+  }
+}

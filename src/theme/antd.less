@@ -1,0 +1,29 @@
+.ant-notification {
+  animation: huxi 2s 1.5s alternate infinite
+    cubic-bezier(0.57, 0.18, 0.42, 0.91);
+  animation-delay: 3s;
+}
+
+.ant-checkbox-inner {
+  border-radius: 50%;
+}
+
+.ant-checkbox {
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+@keyframes huxi {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 15px, 0);
+  }
+}
+
+@media (max-width: 1080px) {
+  .ant-radio-wrapper {
+    margin-bottom: 10px;
+  }
+}
