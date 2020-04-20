@@ -41,7 +41,6 @@
     "fs-extra": "^8.1.0",
     "html-webpack-plugin": "4.0.0-beta.11",
     "identity-obj-proxy": "3.0.0",
-    "imagemin-webpack-plugin": "^2.4.2",
     "jest": "24.9.0",
     "jest-environment-jsdom-fourteen": "1.0.1",
     "jest-resolve": "24.9.0",
@@ -81,9 +80,7 @@
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
-    "test": "react-app-rewired test",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "test": "react-app-rewired test"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -102,8 +99,6 @@
   },
   "devDependencies": {
     "@types/webpack-env": "^1.15.1",
-    "gh-pages": "^2.2.0",
-    "image-webpack-loader": "^6.0.0",
     "less": "^3.11.1",
     "less-loader": "^5.0.0",
     "react-scripts": "^3.4.1"
