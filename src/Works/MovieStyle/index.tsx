@@ -376,7 +376,7 @@ export default class MovieStyle extends Component {
         </Modal>
         <div className={style.MovieStyle}>
           {mobileMode && footerBtns}
-          <div className={cx(style.Content, isLoad && style.LoadContent)}>
+          <div className={style.Content}>
             <canvas
               hidden={!isLoad}
               className={style.canvas}

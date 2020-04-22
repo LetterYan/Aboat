@@ -47,6 +47,7 @@ export default function (_this: any) {
    */
   const drawImage = () => {
     const { photo } = _this;
+    if (!photo.width) return;
     const { configData } = _this.state;
     const cav = _this.canvas.current;
     // 初次加载state

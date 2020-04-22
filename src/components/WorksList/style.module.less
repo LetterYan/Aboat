@@ -8,7 +8,7 @@
     cursor: pointer;
     width: 50%;
     text-align: center;
-    background: #00000075;
+    background: rgba(0, 0, 0, 0.5);
     font-size: 34px;
     height: 100px;
     display: flex;
@@ -45,6 +45,15 @@
       height: 70px;
       font-size: 30px;
       &:hover {
+        > span {
+          transform: translate3d(0, 0, 0);
+        }
+        > .icon {
+          opacity: 0;
+          transform: translate3d(0, 0, 0);
+        }
+      }
+      &:active {
         > span {
           transform: translate3d(-10%, 0, 0);
         }

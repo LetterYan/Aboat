@@ -1,7 +1,8 @@
 .Wrapper {
   overflow: hidden;
   min-height: 100vh;
-  background: #00000075;
+  position: relative;
+  z-index: 1;
   .Content {
     width: 100%;
     min-height: 100vh;
@@ -16,19 +17,20 @@
       .CarouselBox {
         width: 60%;
       }
-      .BgCarousel {
-        transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1);
-        width: 100vw;
-        height: 100%;
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: -1;
-        background: center repeat;
-        background-size: contain;
-      }
     }
   }
+}
+
+.BgCarousel {
+  opacity: 0.5;
+  transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+  width: 100vw;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: center repeat;
+  background-size: contain;
 }
 
 @media (max-width: 1080px) {

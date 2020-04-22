@@ -29,24 +29,23 @@ export default function Home() {
   }, [current]);
 
   return (
-    <div className={style.Wrapper}>
-      <div className={style.Content}>
-        <div className={style.Layout}>
-          <SideBar />
-          <div className={style.CarouselBox}>
-            <Carousel autoplay beforeChange={(f, t) => setCurrent(t)}>
-              {imgList.map(
-                ({ path }) => path && <img alt="" key={path} src={path} />
-              )}
-            </Carousel>
+    <>
+      <div className={style.Wrapper}>
+        <div className={style.Content}>
+          <div className={style.Layout}>
+            <SideBar />
+            <div className={style.CarouselBox}>
+              <Carousel autoplay beforeChange={(f, t) => setCurrent(t)}>
+                {imgList.map(
+                  ({ path }) => path && <img alt="" key={path} src={path} />
+                )}
+              </Carousel>
+            </div>
           </div>
-          <div
-            className={style.BgCarousel}
-            style={{ backgroundColor: bgColor }}
-          />
         </div>
+        <WorksList />
       </div>
-      <WorksList />
-    </div>
+      <div className={style.BgCarousel} style={{ backgroundColor: bgColor }} />
+    </>
   );
 }
