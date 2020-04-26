@@ -2,7 +2,6 @@
  * 便于查找emoji的列表
  */
 const emojisSet: any = new Set([]);
-const emojiBefor = "emoji-";
 
 /**
  * emoji列表
@@ -52,4 +51,4 @@ const emojis: {
   { title: "icon", icons },
 ];
 
-export { emojis, emojisSet, emojiBefor };
+export { emojis, emojisSet };

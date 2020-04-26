@@ -1,6 +1,6 @@
 import { message } from "antd";
 import { colorfulImg, browser } from "noahsark";
-import { emojiBefor, emojisSet } from "utils";
+import { emojisSet } from "utils";
 
 export default function (_this: any) {
   const DraggerProps = {
@@ -128,9 +128,9 @@ export default function (_this: any) {
     if (arr)
       for (let i = 0; i < arr.length; i++) {
         const item = arr[i];
-        if (item.match(emojiBefor)) {
-          const newStr = item.split(reg).join("");
-          str = str.replace(item, `${num}${newStr}${num}`);
+        const name = item.split(reg).join("");
+        if (emojisSet[name]) {
+          str = str.replace(item, `${num}${name}${num}`);
         }
       }
 
@@ -142,7 +142,7 @@ export default function (_this: any) {
       for (let i = 0; i < textList.length; i++) {
         const item = textList[i];
         if (item) {
-          if (item.match(emojiBefor) && emojisSet[item]) {
+          if (emojisSet[item]) {
             preWidth += configData.fontSize + fixSize;
           } else {
             const text = ctx.measureText(item, "text");
@@ -155,7 +155,7 @@ export default function (_this: any) {
     for (let i = 0; i < textList.length; i++) {
       const item = textList[i];
       if (item) {
-        if (item.match(emojiBefor) && emojisSet[item]) {
+        if (emojisSet[item]) {
           const emojie = emojisSet[item];
           emojie.width = configData.fontSize + "px";
           const fontSize = configData.fontSize + fixSize;
@@ -182,7 +182,6 @@ export default function (_this: any) {
         }
       }
     }
-    requestAnimationFrame(drawImage);
   };
 
   let time: boolean = true;
@@ -193,7 +192,7 @@ export default function (_this: any) {
     // img更新状态
     if (time) {
       // 先画
-      drawImage();
+      requestAnimationFrame(drawImage);
       if (
         /top|bottom|padding|fontSize/.test(type) &&
         (value === "" || value === null)
