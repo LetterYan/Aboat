@@ -1,51 +1,51 @@
 .Wrapper {
-  overflow: hidden;
-  min-height: 100vh;
-  position: relative;
-  z-index: 1;
-  .Content {
-    width: 100%;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    .Layout {
-      max-width: 1440px;
-      margin: 0 auto;
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-around;
-      .CarouselBox {
-        box-shadow: 0 0 30px 0px rgba(0, 0, 0, 0.2);
-        width: 60%;
-      }
-    }
-  }
+	overflow: hidden;
+	min-height: 100vh;
+	position: relative;
+	z-index: 1;
+	.Content {
+		width: 100%;
+		min-height: 100vh;
+		display: flex;
+		align-items: center;
+		.Layout {
+			max-width: 1440px;
+			margin: 0 auto;
+			display: flex;
+			align-items: flex-start;
+			justify-content: space-around;
+			.CarouselBox {
+				box-shadow: 0 0 30px 0px rgba(0, 0, 0, 0.2);
+				width: 60%;
+			}
+		}
+	}
 }
 
 .BgCarousel {
-  transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1);
-  width: 100vw;
-  height: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  background: center repeat;
-  filter: brightness(0.65);
-  background-size: contain;
+	transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+	width: 100vw;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	background: center repeat;
+	filter: brightness(0.65);
+	background-size: contain;
 }
 
 @media (max-width: 1080px) {
-  .Wrapper {
-    .Content {
-      align-items: flex-start;
-      min-height: unset;
-      .Layout {
-        display: inline;
-        max-width: 100vw;
-        .CarouselBox {
-          width: 100%;
-        }
-      }
-    }
-  }
+	.Wrapper {
+		.Content {
+			align-items: flex-start;
+			min-height: unset;
+			.Layout {
+				display: inline;
+				max-width: 100vw;
+				.CarouselBox {
+					width: 100%;
+				}
+			}
+		}
+	}
 }

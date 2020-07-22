@@ -1,8 +1,8 @@
-export { default as SideBar } from "./Sider";
-export { default as FirstPage } from "./FirstPage";
-export { default as EmojiBox } from "./EmojiBox";
-export { default as WorksList } from "./WorksList";
-export { default as Header } from "./Header";
+export { default as SideBar } from './Sider';
+export { default as FirstPage } from './FirstPage';
+export { default as EmojiBox } from './EmojiBox';
+export { default as WorksList } from './WorksList';
+export { default as Header } from './Header';
 
 // const components: any = {};
 // require

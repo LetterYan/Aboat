@@ -1,42 +1,42 @@
 .Layout {
-  display: flex;
-  font-size: 120px;
-  align-items: center;
-  justify-content: center;
-  width: 100vw;
-  height: 100vh;
-  position: fixed;
-  z-index: 999999;
-  background-color: #000000;
-  animation: opacityAnime 1s ease 1.2s forwards;
-  .Context {
-    padding: 0 10px;
-    font-style: italic;
-    color: transparent;
-    animation: moveAnime 1s cubic-bezier(1, -0.9, 0.35, 1.32) forwards;
-    -webkit-background-clip: text;
-    background-clip: text;
-  }
+	display: flex;
+	font-size: 120px;
+	align-items: center;
+	justify-content: center;
+	width: 100vw;
+	height: 100vh;
+	position: fixed;
+	z-index: 999999;
+	background-color: #000000;
+	animation: opacityAnime 1s ease 1.2s forwards;
+	.Context {
+		padding: 0 10px;
+		font-style: italic;
+		color: transparent;
+		animation: moveAnime 1s cubic-bezier(1, -0.9, 0.35, 1.32) forwards;
+		-webkit-background-clip: text;
+		background-clip: text;
+	}
 }
 
 @keyframes opacityAnime {
-  from {
-    opacity: 1;
-  }
+	from {
+		opacity: 1;
+	}
 
-  to {
-    opacity: 0;
-    z-index: -1;
-  }
+	to {
+		opacity: 0;
+		z-index: -1;
+	}
 }
 
 @keyframes moveAnime {
-  from {
-    opacity: 0;
-    transform: translate3d(-6vw, 0, 0);
-  }
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
+	from {
+		opacity: 0;
+		transform: translate3d(-6vw, 0, 0);
+	}
+	to {
+		opacity: 1;
+		transform: translate3d(0, 0, 0);
+	}
 }
